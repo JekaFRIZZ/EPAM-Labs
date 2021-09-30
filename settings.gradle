@@ -1,0 +1,4 @@
+rootProject.name = 'epam-lab'
+include 'core'
+include 'web'
+
