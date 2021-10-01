@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 @ComponentScan("com.epam.esm")
 public class Controller {
 
-    @GetMapping("123")
-    public String add() {
+    @GetMapping("/")
+    public String home() {
         return "123";
     }
 }
