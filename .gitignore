@@ -21,6 +21,7 @@
 
 hs_err_pid*
 
+build
 core/build/
 web/build/
 .idea
