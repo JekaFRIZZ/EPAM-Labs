@@ -2,7 +2,7 @@ package com.epam.esm.service;
 
 import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.entity.GiftCertificate;
-import com.epam.esm.exception.NotExistEntity;
+import com.epam.esm.exception.NotExistEntityException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,11 +23,11 @@ public class GiftCertificateService {
         return giftCertificateDao.getAll();
     }
 
-    public GiftCertificate getById(Long id) throws NotExistEntity {
+    public GiftCertificate getById(Long id) {
         Optional<GiftCertificate> giftCertificate = giftCertificateDao.getById(id);
 
         if(!giftCertificate.isPresent()) {
-            throw new NotExistEntity("Certificate with such id doesn't exist");
+            throw new NotExistEntityException("Certificate with such id doesn't exist");
         }
 
         return giftCertificate.get();
