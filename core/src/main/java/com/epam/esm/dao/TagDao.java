@@ -16,6 +16,7 @@ public class TagDao {
     private static final String CREATE = "INSERT INTO tag(name) VALUES (?)";
     private static final String GET_ALL = "SELECT * FROM tag";
     private static final String DELETE = "DELETE FROM tag WHERE id = ?";
+    private static final String GET_BY_NAME = "SELECT * FROM tag WHERE name = ?";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -30,6 +31,10 @@ public class TagDao {
 
     public Optional<Tag> getById(Long id) {
         return getTagForSingleResult(GET_BY_ID, id);
+    }
+
+    public Optional<Tag> getByName(String name) {
+        return getTagForSingleResult(GET_BY_NAME, name);
     }
 
     public void create(Tag tag) {
