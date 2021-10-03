@@ -17,6 +17,8 @@ dependencies {
     implementation 'org.springframework:spring-webmvc:5.3.9'
     implementation 'org.springframework:spring-beans:5.3.9'
 
+    implementation 'postgresql:postgresql:9.1-901-1.jdbc4'
+
     compileOnly 'javax.servlet:javax.servlet-api:4.0.1'
 
     implementation group: 'commons-logging', name: 'commons-logging', version: '1.1.3'
