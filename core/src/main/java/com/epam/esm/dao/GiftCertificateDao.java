@@ -1,9 +1,8 @@
 package com.epam.esm.dao;
 
 import com.epam.esm.entity.GiftCertificate;
-import com.epam.esm.entity.Tag;
+import com.epam.esm.mapper.GiftCertificateRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -26,7 +25,7 @@ public class GiftCertificateDao {
     }
 
     public List<GiftCertificate> getAll() {
-        return jdbcTemplate.query(GET_ALL, new BeanPropertyRowMapper<>());
+        return jdbcTemplate.query(GET_ALL, new GiftCertificateRowMapper());
     }
 
     public Optional<GiftCertificate> getById(Long id) {
@@ -48,7 +47,7 @@ public class GiftCertificateDao {
     }
 
     private Optional<GiftCertificate> getTagForSingleResult(String query, Object... params) {
-        List<GiftCertificate> certificates = jdbcTemplate.query(query, new BeanPropertyRowMapper<>(), params);
+        List<GiftCertificate> certificates = jdbcTemplate.query(query, new GiftCertificateRowMapper(), params);
 
         if (certificates.size() == 1) {
             return Optional.of(certificates.get(0));
