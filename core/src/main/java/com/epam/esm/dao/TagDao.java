@@ -1,6 +1,7 @@
 package com.epam.esm.dao;
 
 import com.epam.esm.entity.Tag;
+import com.epam.esm.mapper.TagRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -26,7 +27,7 @@ public class TagDao {
     }
 
     public List<Tag> getAll() {
-        return jdbcTemplate.query(GET_ALL, new BeanPropertyRowMapper<>());
+        return jdbcTemplate.query(GET_ALL, new TagRowMapper());
     }
 
     public Optional<Tag> getById(Long id) {
@@ -46,7 +47,7 @@ public class TagDao {
     }
 
     private Optional<Tag> getTagForSingleResult(String query, Object... params) {
-        List<Tag> tags = jdbcTemplate.query(query, new BeanPropertyRowMapper<>(), params);
+        List<Tag> tags = jdbcTemplate.query(query, new TagRowMapper(), params);
 
         if (tags.size() == 1) {
             return Optional.of(tags.get(0));
