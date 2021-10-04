@@ -2,14 +2,13 @@ package com.epam.esm.configuration;
 
 import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.dao.TagDao;
-import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.TagService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.sql.DataSource;
@@ -17,41 +16,31 @@ import javax.sql.DataSource;
 @Configuration
 @ComponentScan("com.epam.esm")
 @EnableWebMvc
+@PropertySource("classpath:database/db_init.properties")
 public class SpringConfig {
 
     @Bean
-    public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("org.postgresql.Driver");
-        dataSource.setUrl("jdbc:postgresql://localhost:5432/labs");
-        dataSource.setUsername("postgres");
-        dataSource.setPassword("12345");
-
-        return dataSource;
+    public JdbcTemplate jdbcTemplate(DataSource dataSource) {
+        return new JdbcTemplate(dataSource);
     }
 
     @Bean
-    public JdbcTemplate jdbcTemplate() {
-        return new JdbcTemplate(dataSource());
+    public TagDao tagDao(JdbcTemplate jdbcTemplate) {
+        return new TagDao(jdbcTemplate);
     }
 
     @Bean
-    public TagDao tagDao(){
-        return new TagDao(jdbcTemplate());
+    public GiftCertificateDao giftCertificateDao(JdbcTemplate jdbcTemplate) {
+        return new GiftCertificateDao(jdbcTemplate);
     }
 
     @Bean
-    public GiftCertificateDao giftCertificateDao() {
-        return new GiftCertificateDao(jdbcTemplate());
+    public TagService tagService(JdbcTemplate jdbcTemplate) {
+        return new TagService(tagDao(jdbcTemplate));
     }
 
     @Bean
-    public TagService tagService() {
-        return new TagService(tagDao());
-    }
-
-    @Bean
-    public GiftCertificateService giftCertificateService() {
-        return new GiftCertificateService(giftCertificateDao());
+    public GiftCertificateService giftCertificateService(JdbcTemplate jdbcTemplate) {
+        return new GiftCertificateService(giftCertificateDao(jdbcTemplate));
     }
 }
