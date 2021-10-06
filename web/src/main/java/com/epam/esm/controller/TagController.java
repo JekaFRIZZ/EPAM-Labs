@@ -3,6 +3,7 @@ package com.epam.esm.controller;
 import com.epam.esm.entity.ErrorData;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.ResourceNotFoundException;
+import com.epam.esm.exception.ResourceNotUniqueException;
 import com.epam.esm.service.TagService;
 import com.epam.esm.util.ErrorUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +63,13 @@ public class TagController {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorData> handleResourceNotFoundException(Locale locale){
-        return ErrorUtils.createResponseEntityForCustomError(messageSource.getMessage("resource.not.found", new Object[]{}, locale),
+        return ErrorUtils.createResponseEntityForCustomError(messageSource.getMessage("resource.not.found", null, locale),
                 777, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ResourceNotUniqueException.class)
+    public ResponseEntity<ErrorData> handleResourceNotUniqueException(Locale locale){
+        return ErrorUtils.createResponseEntityForCustomError(messageSource.getMessage("resource.not.unique", null, locale),
+                7777, HttpStatus.NOT_FOUND);
     }
 }
