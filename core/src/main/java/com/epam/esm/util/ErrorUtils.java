@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 
 public class ErrorUtils {
 
-    public static ResponseEntity<?> createResponseEntityForCustomError(String message ,int errorCode,HttpStatus httpStatus) {
+    public static ResponseEntity<ErrorData> createResponseEntityForCustomError(String message ,int errorCode, HttpStatus httpStatus) {
         ErrorData errorData = new ErrorData(message, errorCode);
         return new ResponseEntity<>(errorData, httpStatus);
     }

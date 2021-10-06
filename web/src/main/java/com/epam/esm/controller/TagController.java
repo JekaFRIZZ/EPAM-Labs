@@ -1,13 +1,18 @@
 package com.epam.esm.controller;
 
+import com.epam.esm.entity.ErrorData;
 import com.epam.esm.entity.Tag;
+import com.epam.esm.exception.ResourceNotFoundException;
 import com.epam.esm.service.TagService;
+import com.epam.esm.util.ErrorUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Locale;
 
 @RestController
 @RequestMapping("/tag")
@@ -16,10 +21,12 @@ public class TagController {
     private static final String PRODUCES = "application/json";
 
     private final TagService tagService;
+    private final MessageSource messageSource;
 
     @Autowired
-    public TagController(TagService tagService) {
+    public TagController(TagService tagService, MessageSource messageSource) {
         this.tagService = tagService;
+        this.messageSource = messageSource;
     }
 
     @GetMapping(value = "getAll", produces = PRODUCES)
@@ -37,6 +44,7 @@ public class TagController {
     @GetMapping(value = "getByName", produces = PRODUCES)
     public ResponseEntity<?> getTagByName(@RequestParam("name") String name) {
         Tag tag = tagService.getByName(name);
+
         return new ResponseEntity<>(tag, HttpStatus.OK);
     }
 
@@ -46,9 +54,15 @@ public class TagController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @DeleteMapping(value = "deleteById", produces = PRODUCES)
-    public ResponseEntity<?> deleteById(@RequestParam("id") Long id) {
+    @DeleteMapping(value = "/{id}", produces = PRODUCES)
+    public ResponseEntity<?> deleteById(@PathVariable Long id) {
         tagService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ErrorData> handleResourceNotFoundException(Locale locale){
+        return ErrorUtils.createResponseEntityForCustomError(messageSource.getMessage("resource.not.found", new Object[]{}, locale),
+                777, HttpStatus.NOT_FOUND);
     }
 }
