@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -26,6 +27,7 @@ import java.nio.charset.StandardCharsets;
 @ComponentScan("com.epam.esm")
 @EnableWebMvc
 @PropertySource("classpath:database/db_init.properties")
+@EnableTransactionManagement
 public class AppConfig implements WebMvcConfigurer {
 
     private static final String LOCALE = "locale";
