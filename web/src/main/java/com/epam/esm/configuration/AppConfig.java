@@ -62,7 +62,7 @@ public class AppConfig implements WebMvcConfigurer {
 
     @Bean
     public GiftCertificateService giftCertificateService(JdbcTemplate jdbcTemplate) {
-        return new GiftCertificateService(giftCertificateDao(jdbcTemplate), giftCertificateTagDao(jdbcTemplate));
+        return new GiftCertificateService(giftCertificateDao(jdbcTemplate), giftCertificateTagDao(jdbcTemplate), tagDao(jdbcTemplate));
     }
 
     @Bean

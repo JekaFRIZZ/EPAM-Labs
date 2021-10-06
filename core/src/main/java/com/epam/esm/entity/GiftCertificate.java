@@ -1,16 +1,44 @@
 package com.epam.esm.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 public class GiftCertificate {
 
+    @JsonIgnore
     private Long id;
     private String name;
     private String description;
     private Integer price;
     private Long duration;
-    private Long createData;
-    private Long lastUpdateDate;
+    private LocalDateTime createData;
+    private LocalDateTime lastUpdateDate;
+    private List<Tag> tags;
+
+    private static final String DATE_TIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS";
+
+    public GiftCertificate(Long id,
+                           String name,
+                           String description,
+                           Integer price,
+                           Long duration,
+                           LocalDateTime createData,
+                           LocalDateTime lastUpdateDate,
+                           List<Tag> tags) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.duration = duration;
+        this.createData = createData;
+        this.lastUpdateDate = lastUpdateDate;
+        this.tags = tags;
+    }
 
     public GiftCertificate() {
     }
@@ -20,8 +48,8 @@ public class GiftCertificate {
                            String description,
                            Integer price,
                            Long duration,
-                           Long createData,
-                           Long lastUpdateDate) {
+                           LocalDateTime createData,
+                           LocalDateTime lastUpdateDate) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -30,6 +58,8 @@ public class GiftCertificate {
         this.createData = createData;
         this.lastUpdateDate = lastUpdateDate;
     }
+
+
 
     public Long getId() {
         return id;
@@ -71,21 +101,33 @@ public class GiftCertificate {
         this.duration = duration;
     }
 
-    public Long getCreateData() {
+    @JsonFormat(pattern = DATE_TIME_PATTERN)
+    public LocalDateTime getCreateData() {
         return createData;
     }
 
-    public void setCreateData(Long createData) {
+    public void setCreateData(LocalDateTime createData) {
         this.createData = createData;
     }
 
-    public Long getLastUpdateDate() {
+    @JsonFormat(pattern = DATE_TIME_PATTERN)
+    public LocalDateTime getLastUpdateDate() {
         return lastUpdateDate;
     }
 
-    public void setLastUpdateDate(Long lastUpdateDate) {
+    public void setLastUpdateDate(LocalDateTime lastUpdateDate) {
         this.lastUpdateDate = lastUpdateDate;
     }
+
+    @JsonProperty
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
+    }
+
 
     @Override
     public boolean equals(Object o) {

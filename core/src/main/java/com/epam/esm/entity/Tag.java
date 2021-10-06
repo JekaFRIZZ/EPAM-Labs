@@ -1,13 +1,16 @@
 package com.epam.esm.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.util.Objects;
 
 public class Tag {
 
-    private Long id;
+    @JsonIgnore
+    private Integer id;
     private String name;
 
-    public Tag(Long id, String name) {
+    public Tag(Integer id, String name) {
         this.id = id;
         this.name = name;
     }
@@ -15,11 +18,11 @@ public class Tag {
     public Tag() {
     }
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

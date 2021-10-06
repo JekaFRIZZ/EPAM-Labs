@@ -19,14 +19,10 @@ public class GiftCertificateTagDao {
     }
 
     public void createTagsForGift(List<Tag> tags, Integer giftId) {
-        for(int i = 0; i < tags.size(); i++) {
-            Optional<Tag> tag = tagDao.getByName(tags.get(i).getName());
-            if(tag.isPresent()) {
-                jdbcTemplate.update("INSERT INTO gifts_and_tags VALUES (?, ?)", giftId, tag.get().getId());
-            } else {
-                Integer tagId = tagDao.create(tags.get(i));
-                jdbcTemplate.update("INSERT INTO gifts_and_tags VALUES (?, ?)", giftId, tagId);
-            }
-        }
+
+    }
+
+    public void associateTagWithGift(Integer giftId, Integer TagId) {
+        jdbcTemplate.update("INSERT INTO gifts_and_tags VALUES (?, ?)", giftId, TagId);
     }
 }

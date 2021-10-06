@@ -30,22 +30,15 @@ public class TagController {
         this.messageSource = messageSource;
     }
 
-    @GetMapping(value = "getAll", produces = PRODUCES)
+    @GetMapping(produces = PRODUCES)
     public ResponseEntity<?> getAll() {
         List<Tag> tags = tagService.getAll();
         return new ResponseEntity<>(tags, HttpStatus.OK);
     }
 
-    @GetMapping(value = "getById", produces = PRODUCES)
-    public ResponseEntity<?> getTagById(@RequestParam("id") Long id) {
+    @GetMapping(value = "/{id}", produces = PRODUCES)
+    public ResponseEntity<?> getTagById(@PathVariable("id") Long id) {
         Tag tag = tagService.getById(id);
-        return new ResponseEntity<>(tag, HttpStatus.OK);
-    }
-
-    @GetMapping(value = "getByName", produces = PRODUCES)
-    public ResponseEntity<?> getTagByName(@RequestParam("name") String name) {
-        Tag tag = tagService.getByName(name);
-
         return new ResponseEntity<>(tag, HttpStatus.OK);
     }
 

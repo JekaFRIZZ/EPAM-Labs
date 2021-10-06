@@ -30,7 +30,7 @@ public class GiftCertificateController {
         this.messageSource = messageSource;
     }
 
-    @GetMapping(value = "getAll", produces = PRODUCES)
+    @GetMapping(produces = PRODUCES)
     public ResponseEntity<?> getAll() {
         List<GiftCertificate> giftCertificates = giftCertificateService.getAll();
         return new ResponseEntity<>(giftCertificates, HttpStatus.OK);

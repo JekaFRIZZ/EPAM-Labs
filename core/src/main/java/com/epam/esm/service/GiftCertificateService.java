@@ -2,6 +2,7 @@ package com.epam.esm.service;
 
 import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.dao.GiftCertificateTagDao;
+import com.epam.esm.dao.TagDao;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.ResourceNotFoundException;
@@ -20,15 +21,16 @@ public class GiftCertificateService {
 
     private final GiftCertificateDao giftCertificateDao;
     private final GiftCertificateTagDao giftCertificateTagDao;
+    private final TagDao tagDao;
 
     private static final String DATE_TIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS";
 
     @Autowired
-    public GiftCertificateService(GiftCertificateDao giftCertificateDao, GiftCertificateTagDao giftCertificateTagDao) {
+    public GiftCertificateService(GiftCertificateDao giftCertificateDao, GiftCertificateTagDao giftCertificateTagDao, TagDao tagDao) {
         this.giftCertificateDao = giftCertificateDao;
         this.giftCertificateTagDao = giftCertificateTagDao;
+        this.tagDao = tagDao;
     }
-
 
     public List<GiftCertificate> getAll() {
         return giftCertificateDao.getAll();
@@ -61,7 +63,20 @@ public class GiftCertificateService {
         List<Tag> tags = giftCertificate.getTags();
 
         if(tags != null && !tags.isEmpty()) {
-            giftCertificateTagDao.createTagsForGift(tags, giftId);
+            createTagsForGift(tags, giftId);
+        }
+    }
+
+    private void createTagsForGift(List<Tag> tags, Integer giftId) {
+        for(int i = 0; i < tags.size(); i++) {
+            Optional<Tag> tag = tagDao.getByName(tags.get(i).getName());
+            Integer tagId;
+            if(!tag.isPresent()) {
+                tagId = tagDao.create(tags.get(i));
+            } else {
+                tagId = tag.get().getId();
+            }
+            giftCertificateTagDao.associateTagWithGift(giftId, tagId);
         }
     }
 
