@@ -1,7 +1,9 @@
 package com.epam.esm.service;
 
 import com.epam.esm.dao.GiftCertificateDao;
+import com.epam.esm.dao.GiftCertificateTagDao;
 import com.epam.esm.entity.GiftCertificate;
+import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.ResourceNotFoundException;
 import com.epam.esm.exception.ResourceNotUniqueException;
 import com.epam.esm.util.DataUtils;
@@ -16,13 +18,16 @@ import java.util.Optional;
 public class GiftCertificateService {
 
     private final GiftCertificateDao giftCertificateDao;
+    private final GiftCertificateTagDao giftCertificateTagDao;
 
     private static final String DATE_TIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS";
 
     @Autowired
-    public GiftCertificateService(GiftCertificateDao giftCertificateDao) {
+    public GiftCertificateService(GiftCertificateDao giftCertificateDao, GiftCertificateTagDao giftCertificateTagDao) {
         this.giftCertificateDao = giftCertificateDao;
+        this.giftCertificateTagDao = giftCertificateTagDao;
     }
+
 
     public List<GiftCertificate> getAll() {
         return giftCertificateDao.getAll();
@@ -49,7 +54,13 @@ public class GiftCertificateService {
         giftCertificate.setCreateData(currentTime);
         giftCertificate.setLastUpdateDate(currentTime);
 
-        giftCertificateDao.create(giftCertificate);
+        Integer giftId = giftCertificateDao.create(giftCertificate);
+
+        List<Tag> tags = giftCertificate.getTags();
+
+        if(tags != null && !tags.isEmpty()) {
+            giftCertificateTagDao.createTagsForGift(tags, giftId);
+        }
     }
 
     public void update(Long id, GiftCertificate giftCertificate) {

@@ -3,10 +3,13 @@ package com.epam.esm.dao;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.mapper.TagRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +21,8 @@ public class TagDao {
     private static final String GET_ALL = "SELECT * FROM tag";
     private static final String DELETE = "DELETE FROM tag WHERE id = ?";
     private static final String GET_BY_NAME = "SELECT * FROM tag WHERE name = ?";
+
+    private static final int TAG_NAME_INDEX = 1;
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -38,8 +43,19 @@ public class TagDao {
         return getTagForSingleResult(GET_BY_NAME, name);
     }
 
-    public void create(Tag tag) {
-        jdbcTemplate.update(CREATE, tag.getName());
+    public Integer create(Tag tag) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connection ->{
+            PreparedStatement statement = connection.prepareStatement(CREATE, Statement.RETURN_GENERATED_KEYS);
+
+            statement.setString(TAG_NAME_INDEX, tag.getName());
+            return statement;
+        }, keyHolder);
+
+        Integer key = (Integer) keyHolder.getKeys().get("id");
+
+        return key;
     }
 
     public void deleteById(Long id) {

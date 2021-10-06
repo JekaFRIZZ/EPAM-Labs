@@ -4,9 +4,12 @@ import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.mapper.GiftCertificateRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,9 +50,11 @@ public class GiftCertificateDao {
     }
 
 
-    public void create(GiftCertificate giftCertificate) {
+    public Integer create(GiftCertificate giftCertificate) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
         jdbcTemplate.update(connection -> {
-            PreparedStatement statement = connection.prepareStatement(CREATE);
+            PreparedStatement statement = connection.prepareStatement(CREATE, Statement.RETURN_GENERATED_KEYS);
 
             statement.setString(GIFT_NAME_INDEX, giftCertificate.getName());
             statement.setString(GIFT_DESCRIPTION_INDEX, giftCertificate.getDescription());
@@ -58,7 +63,11 @@ public class GiftCertificateDao {
             statement.setString(GIFT_CREATE_DATA_INDEX, giftCertificate.getCreateData().toString());
             statement.setString(GIFT_LAST_UPDATE_DATA_INDEX, giftCertificate.getLastUpdateDate().toString());
             return statement;
-        });
+        }, keyHolder);
+
+        Integer key = (Integer) keyHolder.getKeys().get("id");
+
+        return key;
     }
 
     public void update(GiftCertificate giftCertificate) {

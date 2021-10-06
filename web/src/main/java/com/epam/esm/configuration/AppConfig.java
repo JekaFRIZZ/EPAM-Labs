@@ -1,6 +1,7 @@
 package com.epam.esm.configuration;
 
 import com.epam.esm.dao.GiftCertificateDao;
+import com.epam.esm.dao.GiftCertificateTagDao;
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.TagService;
@@ -51,8 +52,13 @@ public class AppConfig implements WebMvcConfigurer {
     }
 
     @Bean
+    public GiftCertificateTagDao giftCertificateTagDao(JdbcTemplate jdbcTemplate) {
+        return new GiftCertificateTagDao(jdbcTemplate, tagDao(jdbcTemplate));
+    }
+
+    @Bean
     public GiftCertificateService giftCertificateService(JdbcTemplate jdbcTemplate) {
-        return new GiftCertificateService(giftCertificateDao(jdbcTemplate));
+        return new GiftCertificateService(giftCertificateDao(jdbcTemplate), giftCertificateTagDao(jdbcTemplate));
     }
 
     @Bean
