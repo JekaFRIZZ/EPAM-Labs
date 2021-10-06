@@ -20,6 +20,8 @@ import java.util.Locale;
 public class GiftCertificateController {
 
     private static final String PRODUCES = "application/json";
+    private static final String RESOURCE_NOT_FOUND = "resource.not.found";
+    private static final String RESOURCE_NOT_UNIQUE = "resource.not.unique";
 
     private final GiftCertificateService giftCertificateService;
     private final MessageSource messageSource;
@@ -62,13 +64,13 @@ public class GiftCertificateController {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorData> handleResourceNotFoundException(Locale locale){
-        return ErrorUtils.createResponseEntityForCustomError(messageSource.getMessage("resource.not.found", null, locale),
+        return ErrorUtils.createResponseEntityForCustomError(messageSource.getMessage(RESOURCE_NOT_FOUND, null, locale),
                 777, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(ResourceNotUniqueException.class)
     public ResponseEntity<ErrorData> handleResourceNotUniqueException(Locale locale){
-        return ErrorUtils.createResponseEntityForCustomError(messageSource.getMessage("resource.not.unique", null, locale),
+        return ErrorUtils.createResponseEntityForCustomError(messageSource.getMessage(RESOURCE_NOT_UNIQUE, null, locale),
                 7777, HttpStatus.NOT_FOUND);
     }
 }
