@@ -1,13 +1,16 @@
 package com.epam.esm.dao;
 
 import com.epam.esm.entity.Tag;
+import com.epam.esm.mapper.TagRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.List;
-import java.util.Optional;
 
 public class GiftCertificateTagDao {
+
+    private static final String ASSOCIATE_TAG_AND_GIFT = "INSERT INTO gifts_and_tags VALUES (?, ?)";
+        private static final String GET_TAGS_BY_ID_GIFT = "SELECT * FROM tag WHERE id IN(SELECT tag_id FROM gifts_and_tags WHERE certificate_id = ?)";
 
     private final JdbcTemplate jdbcTemplate;
     private final TagDao tagDao;
@@ -18,11 +21,13 @@ public class GiftCertificateTagDao {
         this.tagDao = tagDao;
     }
 
-    public void createTagsForGift(List<Tag> tags, Integer giftId) {
-
+    public void associateTagWithGift(Integer giftId, Integer TagId) {
+        jdbcTemplate.update(ASSOCIATE_TAG_AND_GIFT, giftId, TagId);
     }
 
-    public void associateTagWithGift(Integer giftId, Integer TagId) {
-        jdbcTemplate.update("INSERT INTO gifts_and_tags VALUES (?, ?)", giftId, TagId);
+    public List<Tag> getTagsByGiftId(Long giftId) {
+        List<Tag> tags =jdbcTemplate.query(GET_TAGS_BY_ID_GIFT, new TagRowMapper(), giftId);
+        tags.size();
+        return tags;
     }
 }

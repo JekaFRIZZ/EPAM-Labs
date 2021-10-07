@@ -37,13 +37,21 @@ public class GiftCertificateService {
     }
 
     public GiftCertificate getById(Long id) {
-        Optional<GiftCertificate> giftCertificate = giftCertificateDao.getById(id);
+        Optional<GiftCertificate> giftCertificateOptional = giftCertificateDao.getById(id);
 
-        if(!giftCertificate.isPresent()) {
+        if(!giftCertificateOptional.isPresent()) {
             throw new ResourceNotFoundException("Certificate with such id doesn't exist");
         }
 
-        return giftCertificate.get();
+        GiftCertificate giftCertificate = giftCertificateOptional.get();
+        setTagsForGift(giftCertificate, id);
+
+        return giftCertificate;
+    }
+
+    private void setTagsForGift(GiftCertificate giftCertificate, Long id) {
+        List<Tag> tags = giftCertificateTagDao.getTagsByGiftId(id);
+        giftCertificate.setTags(tags);
     }
 
     @Transactional
@@ -79,7 +87,7 @@ public class GiftCertificateService {
             giftCertificateTagDao.associateTagWithGift(giftId, tagId);
         }
     }
-
+    @Transactional
     public void update(Long id, GiftCertificate giftCertificate) {
         Optional<GiftCertificate> giftCertificateOptional = giftCertificateDao.getById(id);
 
