@@ -17,9 +17,9 @@ name varchar(255) NOT NULL
 
 CREATE TABLE gifts_and_tags
 (
-certificata_id bigint,
+certificate_id bigint,
 tag_id bigint,
-PRIMARY KEY (certificata_id, tag_id),
-FOREIGN KEY (certificata_id) REFERENCES gift_certificate (id),
+PRIMARY KEY (certificate_id, tag_id),
+FOREIGN KEY (certificate_id) REFERENCES gift_certificate (id),
 FOREIGN KEY (tag_id) REFERENCES tag (id)
 )
