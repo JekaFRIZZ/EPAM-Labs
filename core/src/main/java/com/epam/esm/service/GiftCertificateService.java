@@ -33,7 +33,9 @@ public class GiftCertificateService {
     }
 
     public List<GiftCertificate> getAll() {
-        return giftCertificateDao.getAll();
+        List<GiftCertificate> giftCertificates = giftCertificateDao.getAll();
+        giftCertificates.stream().forEach(gift -> setTagsForGiftById(gift, gift.getId()));
+        return giftCertificates;
     }
 
     public GiftCertificate getById(Long id) {
@@ -44,12 +46,12 @@ public class GiftCertificateService {
         }
 
         GiftCertificate giftCertificate = giftCertificateOptional.get();
-        setTagsForGift(giftCertificate, id);
+        setTagsForGiftById(giftCertificate, id);
 
         return giftCertificate;
     }
 
-    private void setTagsForGift(GiftCertificate giftCertificate, Long id) {
+    private void setTagsForGiftById(GiftCertificate giftCertificate, Long id) {
         List<Tag> tags = giftCertificateTagDao.getTagsByGiftId(id);
         giftCertificate.setTags(tags);
     }

@@ -16,6 +16,7 @@ public class GiftCertificateRowMapper implements RowMapper<GiftCertificate> {
     public GiftCertificate mapRow(ResultSet rs, int rowNum) throws SQLException {
         GiftCertificate giftCertificate = new GiftCertificate();
 
+        giftCertificate.setId(rs.getLong("id"));
         giftCertificate.setName(rs.getString("name"));
         giftCertificate.setDescription(rs.getString("description"));
         giftCertificate.setPrice(rs.getInt("price"));

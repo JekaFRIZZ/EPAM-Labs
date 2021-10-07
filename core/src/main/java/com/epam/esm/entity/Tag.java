@@ -6,7 +6,6 @@ import java.util.Objects;
 
 public class Tag {
 
-    @JsonIgnore
     private Integer id;
     private String name;
 
