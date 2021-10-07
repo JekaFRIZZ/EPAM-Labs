@@ -27,7 +27,6 @@ public class GiftCertificateTagDao {
 
     public List<Tag> getTagsByGiftId(Long giftId) {
         List<Tag> tags =jdbcTemplate.query(GET_TAGS_BY_ID_GIFT, new TagRowMapper(), giftId);
-        tags.size();
         return tags;
     }
 }
