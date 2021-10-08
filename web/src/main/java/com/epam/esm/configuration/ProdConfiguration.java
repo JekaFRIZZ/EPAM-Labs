@@ -10,7 +10,8 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import javax.sql.DataSource;
 
 @Configuration
-public class DataSourceConfig {
+@Profile("prod")
+public class ProdConfiguration {
 
     private final Environment environment;
 
@@ -20,7 +21,7 @@ public class DataSourceConfig {
     private final String DATABASE_DRIVER = "database.driver";
 
     @Autowired
-    public DataSourceConfig(Environment environment) {
+    public ProdConfiguration(Environment environment) {
         this.environment = environment;
     }
 
