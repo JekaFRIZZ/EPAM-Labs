@@ -28,7 +28,7 @@ public class TagService {
         return tagDao.getAll();
     }
 
-    public Tag getById(Long id) throws ResourceNotFoundException {
+    public Tag getById(Integer id) throws ResourceNotFoundException {
         Optional<Tag> tag = tagDao.getById(id);
 
         if(!tag.isPresent()) {
@@ -58,7 +58,7 @@ public class TagService {
         tagDao.create(tag);
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(Integer id) {
         tagDao.deleteById(id);
     }
 

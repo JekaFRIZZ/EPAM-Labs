@@ -39,7 +39,7 @@ public class TagController {
     }
 
     @GetMapping(value = "/{id}", produces = PRODUCES)
-    public ResponseEntity<?> getTagById(@PathVariable("id") Long id) {
+    public ResponseEntity<?> getTagById(@PathVariable("id") Integer id) {
         Tag tag = tagService.getById(id);
         return new ResponseEntity<>(tag, HttpStatus.OK);
     }
@@ -51,7 +51,7 @@ public class TagController {
     }
 
     @DeleteMapping(value = "/{id}", produces = PRODUCES)
-    public ResponseEntity<?> deleteById(@PathVariable Long id) {
+    public ResponseEntity<?> deleteById(@PathVariable Integer id) {
         tagService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }

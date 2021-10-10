@@ -35,7 +35,7 @@ public class TagDao {
         return jdbcTemplate.query(GET_ALL, new TagRowMapper());
     }
 
-    public Optional<Tag> getById(Long id) {
+    public Optional<Tag> getById(Integer id) {
         return getTagForSingleResult(GET_BY_ID, id);
     }
 
@@ -58,7 +58,7 @@ public class TagDao {
         return key;
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(Integer id) {
         jdbcTemplate.update(DELETE, id);
     }
 
