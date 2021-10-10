@@ -1,5 +1,6 @@
 package com.epam.esm.controller;
 
+import com.epam.esm.dto.GiftCertificateDTO;
 import com.epam.esm.entity.ErrorData;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.exception.ResourceNotFoundException;
@@ -10,13 +11,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Locale;
 
 @RestController
 @RequestMapping("/gift")
+@Validated
 public class GiftCertificateController {
 
     private static final String PRODUCES = "application/json";
@@ -51,8 +56,8 @@ public class GiftCertificateController {
     }
 
     @PostMapping(produces = PRODUCES)
-    public ResponseEntity<?> create(@RequestBody GiftCertificate giftCertificate) {
-        giftCertificateService.create(giftCertificate);
+    public ResponseEntity<?> create(@RequestBody @Validated GiftCertificateDTO giftCertificateDTO) {
+        giftCertificateService.create(giftCertificateDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

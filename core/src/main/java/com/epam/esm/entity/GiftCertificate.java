@@ -1,9 +1,11 @@
 package com.epam.esm.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -11,9 +13,15 @@ import java.util.Objects;
 public class GiftCertificate {
 
     private Long id;
+    @NotNull(message = "Required fields are missing")
+    @NotBlank(message = "The field must have at least 1 non-whitespace character")
     private String name;
+    @NotNull(message = "Required fields are missing")
+    @NotBlank(message = "The field must have at least 1 non-whitespace character")
     private String description;
+    @Min(0)
     private Integer price;
+    @Min(1)
     private Long duration;
     private LocalDateTime createData;
     private LocalDateTime lastUpdateDate;
@@ -140,4 +148,5 @@ public class GiftCertificate {
     public int hashCode() {
         return Objects.hash(id, name, description, price, duration, createData, lastUpdateDate);
     }
+
 }
