@@ -21,7 +21,7 @@ public class GiftCertificateDao {
     private static final String DELETE = "DELETE FROM gift_certificate WHERE id = ?";
     private static final String CREATE = "INSERT INTO gift_certificate(name, description, price, duration, create_date, last_update_date) VALUES (?, ?, ?, ?, ?, ?)";
     private static final String GET_ALL = "SELECT * FROM gift_certificate";
-    public static final String UPDATE = "UPDATE gift_certificate SET name=?, description=?,price=?,duration=?,create_date=? WHERE id = ?";
+    private static final String UPDATE = "UPDATE gift_certificate SET name=?, description=?,price=?,duration=?,create_date=? WHERE id = ?";
 
     private static final int GIFT_NAME_INDEX = 1;
     private static final int GIFT_DESCRIPTION_INDEX = 2;
