@@ -37,6 +37,13 @@ public class GiftCertificateDTO {
         this.tags = tags;
     }
 
+    public GiftCertificateDTO(String name, String description, Integer price, Long duration) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.duration = duration;
+    }
+
     public GiftCertificateDTO() {
     }
 

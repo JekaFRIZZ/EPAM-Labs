@@ -21,7 +21,7 @@ public class GiftCertificateValidator implements Validator<GiftCertificateDTO> {
             throw new ValidationException("The fields must be not null");
         }
 
-        if(nameSize <= 2 && nameSize >= 30) {
+        if(nameSize <= 2 || nameSize >= 30) {
             throw new ValidationException("The name must be between 2 and 30 characters");
         }
 
