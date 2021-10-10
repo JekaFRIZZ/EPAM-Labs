@@ -83,4 +83,13 @@ class GiftCertificateServiceTest {
 
         giftCertificateService.deleteById(id);
     }
+
+    @Test
+    void testSortShouldReturnSortedList() {
+        List<GiftCertificate> expected = Arrays.asList(new GiftCertificate(), new GiftCertificate());
+        when(giftCertificateDao.sortByOrder(null, false)).thenReturn(expected);
+        List<GiftCertificate> actual = giftCertificateService.sortByOrder(null, false);
+
+        assertEquals(expected, actual);
+    }
 }

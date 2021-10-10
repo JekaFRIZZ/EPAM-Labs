@@ -24,6 +24,13 @@ public class GiftCertificateController {
     private static final String PRODUCES = "application/json";
     private static final String RESOURCE_NOT_FOUND = "resource.not.found";
     private static final String RESOURCE_NOT_UNIQUE = "resource.not.unique";
+    private static final String VALID_EXCEPTION = "valid.exception";
+
+
+    private static final String ID = "/{id}";
+    private static final String FIELD_NAME = "fieldName";
+    private static final String IS_ASC = "isASC";
+    private static final String PATH_SORT = "/{fieldName}/{isASC}";
 
     private final GiftCertificateService giftCertificateService;
     private final MessageSource messageSource;
@@ -34,31 +41,72 @@ public class GiftCertificateController {
         this.messageSource = messageSource;
     }
 
+    /**
+     * Returns all {@link GiftCertificate} from database
+     *
+     * @return  {@link ResponseEntity} with a {@link HttpStatus} and all {@link GiftCertificate}.
+     */
     @GetMapping(produces = PRODUCES)
     public ResponseEntity<?> getAll() {
         List<GiftCertificate> giftCertificates = giftCertificateService.getAll();
         return new ResponseEntity<>(giftCertificates, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{id}", produces = PRODUCES)
+    /**
+     * Returns {@link GiftCertificate} from a database by id or throws {@link ResourceNotFoundException} if {@link GiftCertificate} not exist
+     *
+     * @param id - id's {@link GiftCertificate}
+     * @return {@link ResponseEntity} with a {@link HttpStatus} and a {@link GiftCertificate} object or a {@link ErrorData} object.
+     */
+    @GetMapping(value = ID, produces = PRODUCES)
     public ResponseEntity<?> getGiftById(@PathVariable("id") Integer id) {
         GiftCertificate giftCertificate = giftCertificateService.getById(id);
         return new ResponseEntity<>(giftCertificate, HttpStatus.OK);
     }
 
-    @PatchMapping(value = "/{id}", produces = PRODUCES)
+    /**
+     * Updates {@link GiftCertificate} by id's {@link GiftCertificate}
+     *
+     * @param id - id's {@link GiftCertificate} that should be updated
+     * @param giftCertificate - object which will be updated
+     * @return {@link ResponseEntity} with {@link HttpStatus} alone or additionally with {@link ErrorData} object.
+     */
+    @PatchMapping(value = ID, produces = PRODUCES)
     public ResponseEntity<?> updateById(@PathVariable Integer id,@RequestBody GiftCertificate giftCertificate) {
         giftCertificateService.update(id, giftCertificate);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    /**
+     * Creates {@link GiftCertificate}
+     *
+     * @param giftCertificateDTO - object that will be converted to {@link GiftCertificate} and save to database
+     * @return {@link ResponseEntity} with {@link HttpStatus} alone or additionally with {@link ErrorData} object.
+     */
     @PostMapping(produces = PRODUCES)
     public ResponseEntity<?> create(@RequestBody GiftCertificateDTO giftCertificateDTO) {
         giftCertificateService.create(giftCertificateDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @DeleteMapping(value = "/{id}", produces = PRODUCES)
+    /**
+     * @param fieldName the name of the field which will be used for searching {@link GiftCertificate} objects in a database.
+     * @param isASC the sorting order
+     * @return {@link ResponseEntity} with {@link HttpStatus} and all {@link GiftCertificate} objects or a {@link ErrorData} object.
+     */
+    @GetMapping(value = PATH_SORT, produces = PRODUCES)
+    public ResponseEntity<?> sortByFieldInOrder(@PathVariable(FIELD_NAME) String fieldName, @PathVariable(IS_ASC) boolean isASC) {
+        List<GiftCertificate> giftCertificates = giftCertificateService.sortByOrder(fieldName, isASC);
+        return new ResponseEntity<>(giftCertificates, HttpStatus.OK);
+    }
+
+    /**
+     * Deletes {@link GiftCertificate} by id if exist
+     *
+     * @param id {@link GiftCertificate} id which will be deleted
+     * @return {@link ResponseEntity} with {@link HttpStatus} alone or additionally with {@link ErrorData} object.
+     */
+    @DeleteMapping(value = ID, produces = PRODUCES)
     public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
         giftCertificateService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -78,7 +126,7 @@ public class GiftCertificateController {
 
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<ErrorData> handleValidationException(Locale locale){
-        return ErrorUtils.createResponseEntityForCustomError(messageSource.getMessage("valid.exception", null, locale),
+        return ErrorUtils.createResponseEntityForCustomError(messageSource.getMessage(VALID_EXCEPTION, null, locale),
                 777, HttpStatus.NOT_FOUND);
     }
 }

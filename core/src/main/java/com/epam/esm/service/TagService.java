@@ -16,6 +16,10 @@ import java.util.Optional;
 @Service
 public class TagService {
 
+    private static final String TAG_NOT_EXIST_SUCH_ID = "Tag with such id doesn't exist";
+    private static final String TAG_NOT_EXIST_SUCH_NAME = "Tag with such name doesn't exist";
+    private static final String TAG_EXIST = "The tag already exist";
+
     private final TagDao tagDao;
     private final GiftCertificateTagDao giftCertificateTagDao;
     private final TagValidator validator;
@@ -35,7 +39,7 @@ public class TagService {
         Optional<Tag> tag = tagDao.getById(id);
 
         if(!tag.isPresent()) {
-            throw new ResourceNotFoundException("Tag with such id doesn't exist");
+            throw new ResourceNotFoundException(TAG_NOT_EXIST_SUCH_ID);
         }
 
         return tag.get();
@@ -45,7 +49,7 @@ public class TagService {
         Optional<Tag> tag = tagDao.getByName(name);
 
         if(!tag.isPresent()) {
-            throw new ResourceNotFoundException("Tag with such name doesn't exist");
+            throw new ResourceNotFoundException(TAG_NOT_EXIST_SUCH_NAME);
         }
 
         return tag.get();
@@ -58,7 +62,7 @@ public class TagService {
         Optional<Tag> tagOptional = tagDao.getByName(tag.getName());
 
         if(tagOptional.isPresent()) {
-            throw new ResourceNotUniqueException("The tag already exist");
+            throw new ResourceNotUniqueException(TAG_EXIST);
         }
 
         tagDao.create(tag);

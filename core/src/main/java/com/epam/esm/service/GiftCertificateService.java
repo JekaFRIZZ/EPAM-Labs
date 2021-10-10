@@ -19,6 +19,9 @@ import java.util.Optional;
 @Service
 public class GiftCertificateService {
 
+    private static final String CERTIFICATE_WITH_SUCH_ID_DOESNT_EXIST = "Certificate with such id doesn't exist";
+    private static final String GIFT_EXIST_EXCEPTION = "The gift certificate already exist";
+
     private final GiftCertificateDao giftCertificateDao;
     private final GiftCertificateTagDao giftCertificateTagDao;
     private final TagService tagService;
@@ -46,7 +49,7 @@ public class GiftCertificateService {
         Optional<GiftCertificate> giftCertificateOptional = giftCertificateDao.getById(id);
 
         if(!giftCertificateOptional.isPresent()) {
-            throw new ResourceNotFoundException("Certificate with such id doesn't exist");
+            throw new ResourceNotFoundException(CERTIFICATE_WITH_SUCH_ID_DOESNT_EXIST);
         }
 
         GiftCertificate giftCertificate = giftCertificateOptional.get();
@@ -66,7 +69,7 @@ public class GiftCertificateService {
         Optional<GiftCertificate> giftCertificateOptional = giftCertificateDao.getByName(giftCertificateDTO.getName());
 
         if(giftCertificateOptional.isPresent()) {
-            throw new ResourceNotUniqueException("The gift certificate already exist");
+            throw new ResourceNotUniqueException(GIFT_EXIST_EXCEPTION);
         }
 
         giftCertificateValidator.validate(giftCertificateDTO);
@@ -109,7 +112,7 @@ public class GiftCertificateService {
         Optional<GiftCertificate> giftCertificateOptional = giftCertificateDao.getById(id);
 
         if(!giftCertificateOptional.isPresent()) {
-            throw new ResourceNotFoundException("Certificate with such id doesn't exist");
+            throw new ResourceNotFoundException(CERTIFICATE_WITH_SUCH_ID_DOESNT_EXIST);
         }
         giftCertificate.setLastUpdateDate(DataUtils.getCurrentTime(DATE_TIME_PATTERN));
         giftCertificateDao.update(giftCertificate);
@@ -117,5 +120,12 @@ public class GiftCertificateService {
 
     public void deleteById(Integer id) {
         giftCertificateDao.deleteById(id);
+    }
+
+    public List<GiftCertificate> sortByOrder(String fieldName, boolean isASC) {
+        List<GiftCertificate> giftCertificates = giftCertificateDao.sortByOrder(fieldName, isASC);
+        giftCertificates.stream().forEach(gift -> setTagsForGiftById(gift, gift.getId()));
+
+        return giftCertificates;
     }
 }

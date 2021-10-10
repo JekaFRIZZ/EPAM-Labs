@@ -24,6 +24,8 @@ public class TagController {
     private static final String PRODUCES = "application/json";
     private static final String RESOURCE_NOT_FOUND = "resource.not.found";
     private static final String RESOURCE_NOT_UNIQUE = "resource.not.unique";
+    private static final String VALID_EXCEPTION = "valid.exception";
+    private static final String ID = "/{id}";
 
     private final TagService tagService;
     private final MessageSource messageSource;
@@ -34,25 +36,48 @@ public class TagController {
         this.messageSource = messageSource;
     }
 
+    /**
+     * Returns all {@link Tag} from database
+     *
+     * @return  {@link ResponseEntity} with a {@link HttpStatus} and all {@link Tag}.
+     */
     @GetMapping(produces = PRODUCES)
     public ResponseEntity<?> getAll() {
         List<Tag> tags = tagService.getAll();
         return new ResponseEntity<>(tags, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{id}", produces = PRODUCES)
+    /**
+     * Returns {@link Tag} from a database by id or throws {@link ResourceNotFoundException} if {@link Tag} not exist
+     *
+     * @param id - id's {@link Tag}
+     * @return {@link ResponseEntity} with a {@link HttpStatus} and a {@link Tag} object or a {@link ErrorData} object.
+     */
+    @GetMapping(value = ID, produces = PRODUCES)
     public ResponseEntity<?> getTagById(@PathVariable("id") Integer id) {
         Tag tag = tagService.getById(id);
         return new ResponseEntity<>(tag, HttpStatus.OK);
     }
 
+    /**
+     * Creates {@link Tag}
+     *
+     * @param tagDTO - object that will be converted to {@link TagDTO} and save to database
+     * @return {@link ResponseEntity} with {@link HttpStatus} alone or additionally with {@link ErrorData} object.
+     */
     @PostMapping(produces = PRODUCES)
     public ResponseEntity<?> create(@RequestBody TagDTO tagDTO) {
         tagService.create(tagDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @DeleteMapping(value = "/{id}", produces = PRODUCES)
+    /**
+     * Deletes {@link Tag} by id if exist
+     *
+     * @param id {@link Tag} id which will be deleted
+     * @return {@link ResponseEntity} with {@link HttpStatus} alone or additionally with {@link ErrorData} object.
+     */
+    @DeleteMapping(value = ID, produces = PRODUCES)
     public ResponseEntity<?> deleteById(@PathVariable Integer id) {
         tagService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -72,7 +97,7 @@ public class TagController {
 
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<ErrorData> handleValidationException(Locale locale){
-        return ErrorUtils.createResponseEntityForCustomError(messageSource.getMessage("valid.exception", null, locale),
+        return ErrorUtils.createResponseEntityForCustomError(messageSource.getMessage(VALID_EXCEPTION, null, locale),
                 777, HttpStatus.NOT_FOUND);
     }
 }

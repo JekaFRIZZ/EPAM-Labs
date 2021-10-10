@@ -23,6 +23,7 @@ public class TagDao {
     private static final String GET_BY_NAME = "SELECT * FROM tag WHERE name = ?";
 
     private static final int TAG_NAME_INDEX = 1;
+    private static final String SIZE_OF_LIST_MORE_THAN_1 = "Size of list more than 1";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -68,7 +69,7 @@ public class TagDao {
         if (tags.size() == 1) {
             return Optional.of(tags.get(0));
         } else if (tags.size() > 1) {
-            throw new IllegalArgumentException("Size of list more than 1");
+            throw new IllegalArgumentException(SIZE_OF_LIST_MORE_THAN_1);
         }
 
         return Optional.empty();

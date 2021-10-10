@@ -2,6 +2,7 @@ package com.epam.esm.dao;
 
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.mapper.GiftCertificateRowMapper;
+import com.epam.esm.util.DBUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -29,6 +30,8 @@ public class GiftCertificateDao {
     private static final int GIFT_DURATION_INDEX = 4;
     private static final int GIFT_CREATE_DATA_INDEX = 5;
     private static final int GIFT_LAST_UPDATE_DATA_INDEX = 6;
+    private static final String GET_ALL_WITHOUT_TAGS = "SELECT id, name, description, price, duration, create_date, last_update_date FROM gift_certificate";
+    private static final String SIZE_OF_LIST_MORE_THAN_1 = "Size of list more than 1";
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -90,9 +93,15 @@ public class GiftCertificateDao {
         if (certificates.size() == 1) {
             return Optional.of(certificates.get(0));
         } else if (certificates.size() > 1) {
-            throw new IllegalArgumentException("Size of list more than 1");
+            throw new IllegalArgumentException(SIZE_OF_LIST_MORE_THAN_1);
         }
 
         return Optional.empty();
+    }
+
+    public List<GiftCertificate> sortByOrder(String fieldName, boolean isASC) {
+        String query = DBUtils.constructQueryForSorting(GET_ALL_WITHOUT_TAGS, fieldName, isASC);
+
+        return jdbcTemplate.query(query, new GiftCertificateRowMapper());
     }
 }
