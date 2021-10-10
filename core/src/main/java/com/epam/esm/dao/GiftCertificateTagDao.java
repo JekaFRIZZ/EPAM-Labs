@@ -25,7 +25,7 @@ public class GiftCertificateTagDao {
         jdbcTemplate.update(ASSOCIATE_TAG_AND_GIFT, giftId, TagId);
     }
 
-    public List<Tag> getTagsByGiftId(Long giftId) {
+    public List<Tag> getTagsByGiftId(Integer giftId) {
         List<Tag> tags =jdbcTemplate.query(GET_TAGS_BY_ID_GIFT, new TagRowMapper(), giftId);
         return tags;
     }

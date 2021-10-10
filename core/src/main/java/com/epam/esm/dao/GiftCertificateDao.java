@@ -80,7 +80,7 @@ public class GiftCertificateDao {
                 giftCertificate.getId());
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(Integer id) {
         jdbcTemplate.update(DELETE, id);
     }
 

@@ -44,13 +44,13 @@ public class GiftCertificateController {
     }
 
     @GetMapping(value = "/{id}", produces = PRODUCES)
-    public ResponseEntity<?> getGiftById(@PathVariable("id") Long id) {
+    public ResponseEntity<?> getGiftById(@PathVariable("id") Integer id) {
         GiftCertificate giftCertificate = giftCertificateService.getById(id);
         return new ResponseEntity<>(giftCertificate, HttpStatus.OK);
     }
 
     @PatchMapping(value = "/{id}", produces = PRODUCES)
-    public ResponseEntity<?> updateById(@PathVariable Long id,@RequestBody GiftCertificate giftCertificate) {
+    public ResponseEntity<?> updateById(@PathVariable Integer id,@RequestBody GiftCertificate giftCertificate) {
         giftCertificateService.update(id, giftCertificate);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -62,7 +62,7 @@ public class GiftCertificateController {
     }
 
     @DeleteMapping(value = "/{id}", produces = PRODUCES)
-    public ResponseEntity<?> delete(@PathVariable("id") Long id) {
+    public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
         giftCertificateService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }

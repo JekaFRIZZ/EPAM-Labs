@@ -40,7 +40,7 @@ public class GiftCertificateService {
         return giftCertificates;
     }
 
-    public GiftCertificate getById(Long id) {
+    public GiftCertificate getById(Integer id) {
         Optional<GiftCertificate> giftCertificateOptional = giftCertificateDao.getById(id);
 
         if(!giftCertificateOptional.isPresent()) {
@@ -53,7 +53,7 @@ public class GiftCertificateService {
         return giftCertificate;
     }
 
-    private void setTagsForGiftById(GiftCertificate giftCertificate, Long id) {
+    private void setTagsForGiftById(GiftCertificate giftCertificate, Integer id) {
         List<Tag> tags = giftCertificateTagDao.getTagsByGiftId(id);
         giftCertificate.setTags(tags);
     }
@@ -101,7 +101,7 @@ public class GiftCertificateService {
     }
 
     @Transactional
-    public void update(Long id, GiftCertificate giftCertificate) {
+    public void update(Integer id, GiftCertificate giftCertificate) {
         Optional<GiftCertificate> giftCertificateOptional = giftCertificateDao.getById(id);
 
         if(!giftCertificateOptional.isPresent()) {
@@ -111,7 +111,7 @@ public class GiftCertificateService {
         giftCertificateDao.update(giftCertificate);
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(Integer id) {
         giftCertificateDao.deleteById(id);
     }
 }

@@ -12,7 +12,7 @@ import java.util.Objects;
 
 public class GiftCertificate {
 
-    private Long id;
+    private Integer id;
     @NotNull(message = "Required fields are missing")
     @NotBlank(message = "The field must have at least 1 non-whitespace character")
     private String name;
@@ -29,7 +29,7 @@ public class GiftCertificate {
 
     private static final String DATE_TIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS";
 
-    public GiftCertificate(Long id,
+    public GiftCertificate(Integer id,
                            String name,
                            String description,
                            Integer price,
@@ -50,7 +50,7 @@ public class GiftCertificate {
     public GiftCertificate() {
     }
 
-    public GiftCertificate(Long id,
+    public GiftCertificate(Integer id,
                            String name,
                            String description,
                            Integer price,
@@ -68,11 +68,11 @@ public class GiftCertificate {
 
 
 
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -149,4 +149,17 @@ public class GiftCertificate {
         return Objects.hash(id, name, description, price, duration, createData, lastUpdateDate);
     }
 
+    @Override
+    public String toString() {
+        return "GiftCertificate{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", duration=" + duration +
+                ", createData=" + createData +
+                ", lastUpdateDate=" + lastUpdateDate +
+                ", tags=" + tags +
+                '}';
+    }
 }
