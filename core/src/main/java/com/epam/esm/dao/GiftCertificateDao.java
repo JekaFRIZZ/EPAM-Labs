@@ -41,7 +41,7 @@ public class GiftCertificateDao {
         return jdbcTemplate.query(GET_ALL, new GiftCertificateRowMapper());
     }
 
-    public Optional<GiftCertificate> getById(Long id) {
+    public Optional<GiftCertificate> getById(Integer id) {
         return getGiftForSingleResult(GET_BY_ID, id);
     }
 
@@ -77,7 +77,6 @@ public class GiftCertificateDao {
                 giftCertificate.getPrice(),
                 giftCertificate.getDuration(),
                 giftCertificate.getCreateData().toString(),
-                giftCertificate.getLastUpdateDate().toString(),
                 giftCertificate.getId());
     }
 
