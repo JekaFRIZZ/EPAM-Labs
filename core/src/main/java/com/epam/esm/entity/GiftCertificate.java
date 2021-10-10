@@ -13,15 +13,9 @@ import java.util.Objects;
 public class GiftCertificate {
 
     private Integer id;
-    @NotNull(message = "Required fields are missing")
-    @NotBlank(message = "The field must have at least 1 non-whitespace character")
     private String name;
-    @NotNull(message = "Required fields are missing")
-    @NotBlank(message = "The field must have at least 1 non-whitespace character")
     private String description;
-    @Min(0)
     private Integer price;
-    @Min(1)
     private Long duration;
     private LocalDateTime createData;
     private LocalDateTime lastUpdateDate;
@@ -147,19 +141,5 @@ public class GiftCertificate {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, description, price, duration, createData, lastUpdateDate);
-    }
-
-    @Override
-    public String toString() {
-        return "GiftCertificate{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", price=" + price +
-                ", duration=" + duration +
-                ", createData=" + createData +
-                ", lastUpdateDate=" + lastUpdateDate +
-                ", tags=" + tags +
-                '}';
     }
 }

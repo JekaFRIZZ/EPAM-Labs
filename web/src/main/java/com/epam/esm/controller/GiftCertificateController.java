@@ -5,23 +5,20 @@ import com.epam.esm.entity.ErrorData;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.exception.ResourceNotFoundException;
 import com.epam.esm.exception.ResourceNotUniqueException;
+import com.epam.esm.exception.ValidationException;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.util.ErrorUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Locale;
 
 @RestController
 @RequestMapping("/gift")
-@Validated
 public class GiftCertificateController {
 
     private static final String PRODUCES = "application/json";
@@ -56,7 +53,7 @@ public class GiftCertificateController {
     }
 
     @PostMapping(produces = PRODUCES)
-    public ResponseEntity<?> create(@RequestBody @Validated GiftCertificateDTO giftCertificateDTO) {
+    public ResponseEntity<?> create(@RequestBody GiftCertificateDTO giftCertificateDTO) {
         giftCertificateService.create(giftCertificateDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -77,5 +74,11 @@ public class GiftCertificateController {
     public ResponseEntity<ErrorData> handleResourceNotUniqueException(Locale locale){
         return ErrorUtils.createResponseEntityForCustomError(messageSource.getMessage(RESOURCE_NOT_UNIQUE, null, locale),
                 7777, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<ErrorData> handleValidationException(Locale locale){
+        return ErrorUtils.createResponseEntityForCustomError(messageSource.getMessage("valid.exception", null, locale),
+                777, HttpStatus.NOT_FOUND);
     }
 }

@@ -2,13 +2,14 @@ package com.epam.esm.service;
 
 import com.epam.esm.dao.GiftCertificateTagDao;
 import com.epam.esm.dao.TagDao;
+import com.epam.esm.dto.TagDTO;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.ResourceNotFoundException;
 import com.epam.esm.exception.ResourceNotUniqueException;
+import com.epam.esm.validator.TagValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,11 +18,13 @@ public class TagService {
 
     private final TagDao tagDao;
     private final GiftCertificateTagDao giftCertificateTagDao;
+    private final TagValidator validator;
 
     @Autowired
-    public TagService(TagDao tagDao, GiftCertificateTagDao giftCertificateTagDao) {
+    public TagService(TagDao tagDao, GiftCertificateTagDao giftCertificateTagDao, TagValidator validator) {
         this.tagDao = tagDao;
         this.giftCertificateTagDao = giftCertificateTagDao;
+        this.validator = validator;
     }
 
     public List<Tag> getAll() {
@@ -48,7 +51,10 @@ public class TagService {
         return tag.get();
     }
 
-    public void create(@Valid Tag tag) {
+    public void create(TagDTO tagDTO) {
+        validator.validate(tagDTO);
+
+        Tag tag = toTag(tagDTO);
         Optional<Tag> tagOptional = tagDao.getByName(tag.getName());
 
         if(tagOptional.isPresent()) {
@@ -73,5 +79,11 @@ public class TagService {
             }
             giftCertificateTagDao.associateTagWithGift(giftId, tagId);
         }
+    }
+
+    private Tag toTag(TagDTO tagDTO) {
+        Tag tag = new Tag();
+        tag.setName(tagDTO.getName());
+        return tag;
     }
 }

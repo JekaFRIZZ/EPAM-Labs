@@ -8,7 +8,7 @@ import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.ResourceNotFoundException;
 import com.epam.esm.exception.ResourceNotUniqueException;
 import com.epam.esm.util.DataUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.epam.esm.validator.GiftCertificateValidator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,16 +22,18 @@ public class GiftCertificateService {
     private final GiftCertificateDao giftCertificateDao;
     private final GiftCertificateTagDao giftCertificateTagDao;
     private final TagService tagService;
+    private final GiftCertificateValidator giftCertificateValidator;
 
     private static final String DATE_TIME_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS";
 
-    @Autowired
     public GiftCertificateService(GiftCertificateDao giftCertificateDao,
                                   GiftCertificateTagDao giftCertificateTagDao,
-                                  TagService tagService) {
+                                  TagService tagService,
+                                  GiftCertificateValidator giftCertificateValidator) {
         this.giftCertificateDao = giftCertificateDao;
         this.giftCertificateTagDao = giftCertificateTagDao;
         this.tagService = tagService;
+        this.giftCertificateValidator = giftCertificateValidator;
     }
 
     public List<GiftCertificate> getAll() {
@@ -67,6 +69,8 @@ public class GiftCertificateService {
             throw new ResourceNotUniqueException("The gift certificate already exist");
         }
 
+        giftCertificateValidator.validate(giftCertificateDTO);
+
         GiftCertificate giftCertificate = toGiftCertificate(giftCertificateDTO);
 
         LocalDateTime currentTime = DataUtils.getCurrentTime(DATE_TIME_PATTERN);
@@ -77,7 +81,7 @@ public class GiftCertificateService {
 
         List<Tag> tags = giftCertificate.getTags();
 
-        if(tags != null && !tags.isEmpty()) {
+        if (tags != null && !tags.isEmpty()) {
             createTagsForGift(tags, giftId);
         }
     }

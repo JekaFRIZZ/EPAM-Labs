@@ -1,16 +1,10 @@
 package com.epam.esm.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 public class Tag {
 
     private Integer id;
-    @NotNull(message = "Required fields are missing")
-    @NotBlank(message = "The field must have at least 1 non-whitespace character")
     private String name;
 
     public Tag(Integer id, String name) {

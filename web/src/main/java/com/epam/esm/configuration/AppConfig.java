@@ -5,6 +5,8 @@ import com.epam.esm.dao.GiftCertificateTagDao;
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.service.TagService;
+import com.epam.esm.validator.GiftCertificateValidator;
+import com.epam.esm.validator.TagValidator;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -53,7 +55,8 @@ public class AppConfig implements WebMvcConfigurer {
     @Bean
     public TagService tagService(JdbcTemplate jdbcTemplate) {
         return new TagService(tagDao(jdbcTemplate),
-                giftCertificateTagDao(jdbcTemplate));
+                giftCertificateTagDao(jdbcTemplate),
+                tagValidator());
     }
 
     @Bean
@@ -65,7 +68,18 @@ public class AppConfig implements WebMvcConfigurer {
     public GiftCertificateService giftCertificateService(JdbcTemplate jdbcTemplate) {
         return new GiftCertificateService(giftCertificateDao(jdbcTemplate),
                 giftCertificateTagDao(jdbcTemplate),
-                tagService(jdbcTemplate));
+                tagService(jdbcTemplate),
+                giftCertificateValidator());
+    }
+
+    @Bean
+    public TagValidator tagValidator() {
+        return new TagValidator();
+    }
+
+    @Bean
+    public GiftCertificateValidator giftCertificateValidator() {
+        return new GiftCertificateValidator();
     }
 
     @Bean

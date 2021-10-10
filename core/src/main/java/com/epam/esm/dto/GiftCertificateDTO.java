@@ -11,15 +11,9 @@ import java.util.List;
 public class GiftCertificateDTO {
 
     private Long id;
-    @NotNull(message = "Required fields are missing")
-    @NotBlank(message = "The field must have at least 1 non-whitespace character")
     private String name;
-    @NotNull(message = "Required fields are missing")
-    @NotBlank(message = "The field must have at least 1 non-whitespace character")
     private String description;
-    @Min(value = 0)
     private Integer price;
-    @Min(value = 1)
     private Long duration;
     private LocalDateTime createData;
     private LocalDateTime lastUpdateDate;
@@ -110,17 +104,4 @@ public class GiftCertificateDTO {
         this.tags = tags;
     }
 
-    @Override
-    public String toString() {
-        return "GiftCertificateDTO{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", price=" + price +
-                ", duration=" + duration +
-                ", createData=" + createData +
-                ", lastUpdateDate=" + lastUpdateDate +
-                ", tags=" + tags +
-                '}';
-    }
 }

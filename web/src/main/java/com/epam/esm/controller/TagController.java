@@ -1,9 +1,11 @@
 package com.epam.esm.controller;
 
+import com.epam.esm.dto.TagDTO;
 import com.epam.esm.entity.ErrorData;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.exception.ResourceNotFoundException;
 import com.epam.esm.exception.ResourceNotUniqueException;
+import com.epam.esm.exception.ValidationException;
 import com.epam.esm.service.TagService;
 import com.epam.esm.util.ErrorUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,8 +47,8 @@ public class TagController {
     }
 
     @PostMapping(produces = PRODUCES)
-    public ResponseEntity<?> create(@RequestBody Tag tag) {
-        tagService.create(tag);
+    public ResponseEntity<?> create(@RequestBody TagDTO tagDTO) {
+        tagService.create(tagDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
@@ -66,5 +68,11 @@ public class TagController {
     public ResponseEntity<ErrorData> handleResourceNotUniqueException(Locale locale){
         return ErrorUtils.createResponseEntityForCustomError(messageSource.getMessage(RESOURCE_NOT_UNIQUE, null, locale),
                 7777, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<ErrorData> handleValidationException(Locale locale){
+        return ErrorUtils.createResponseEntityForCustomError(messageSource.getMessage("valid.exception", null, locale),
+                777, HttpStatus.NOT_FOUND);
     }
 }
