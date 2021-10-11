@@ -4,6 +4,8 @@ import com.epam.esm.dto.GiftCertificateDTO;
 import com.epam.esm.exception.ValidationException;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
+
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class GiftCertificateValidatorTest {
@@ -12,8 +14,8 @@ class GiftCertificateValidatorTest {
     private static final String CORRECT_NAME = "someName";
     private static final String INCORRECT_NAME = "s";
     private static final String DESCRIPTION = "someDescription";
-    private static final Integer POSITIVE_PRICE = 5;
-    private static final Integer NEGATIVE_PRICE = -5;
+    private static final BigDecimal POSITIVE_PRICE = BigDecimal.valueOf(5);
+    private static final BigDecimal NEGATIVE_PRICE = BigDecimal.valueOf(-5);
     private static final Long POSITIVE_DURATION = 10L;
     private static final Long NEGATIVE_DURATION = -10L;
 

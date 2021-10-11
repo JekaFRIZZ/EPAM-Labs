@@ -4,8 +4,8 @@ import com.epam.esm.dao.GiftCertificateTagDao;
 import com.epam.esm.dao.TagDao;
 import com.epam.esm.dto.TagDTO;
 import com.epam.esm.entity.Tag;
-import com.epam.esm.exception.ResourceNotFoundException;
-import com.epam.esm.exception.ResourceNotUniqueException;
+import com.epam.esm.exception.ResourceExistenceException;
+import com.epam.esm.exception.DuplicateResourceException;
 import com.epam.esm.validator.TagValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,10 +15,6 @@ import java.util.Optional;
 
 @Service
 public class TagService {
-
-    private static final String TAG_NOT_EXIST_SUCH_ID = "Tag with such id doesn't exist";
-    private static final String TAG_NOT_EXIST_SUCH_NAME = "Tag with such name doesn't exist";
-    private static final String TAG_EXIST = "The tag already exist";
 
     private final TagDao tagDao;
     private final GiftCertificateTagDao giftCertificateTagDao;
@@ -35,11 +31,11 @@ public class TagService {
         return tagDao.getAll();
     }
 
-    public Tag getById(Integer id) throws ResourceNotFoundException {
+    public Tag getById(Integer id) throws ResourceExistenceException {
         Optional<Tag> tag = tagDao.getById(id);
 
         if(!tag.isPresent()) {
-            throw new ResourceNotFoundException(TAG_NOT_EXIST_SUCH_ID);
+            throw new ResourceExistenceException("Tag with such id doesn't exist");
         }
 
         return tag.get();
@@ -49,7 +45,7 @@ public class TagService {
         Optional<Tag> tag = tagDao.getByName(name);
 
         if(!tag.isPresent()) {
-            throw new ResourceNotFoundException(TAG_NOT_EXIST_SUCH_NAME);
+            throw new ResourceExistenceException("Tag with such name doesn't exist");
         }
 
         return tag.get();
@@ -62,13 +58,18 @@ public class TagService {
         Optional<Tag> tagOptional = tagDao.getByName(tag.getName());
 
         if(tagOptional.isPresent()) {
-            throw new ResourceNotUniqueException(TAG_EXIST);
+            throw new DuplicateResourceException("The tag already exist");
         }
 
         tagDao.create(tag);
     }
 
     public void deleteById(Integer id) {
+        Optional<Tag> tag = tagDao.getById(id);
+        if(!tag.isPresent()) {
+            throw new ResourceExistenceException("Tag with such id doesn't exist");
+        }
+
         tagDao.deleteById(id);
     }
 

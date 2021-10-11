@@ -5,13 +5,14 @@ import com.epam.esm.dao.GiftCertificateTagDao;
 import com.epam.esm.dto.GiftCertificateDTO;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Tag;
-import com.epam.esm.exception.ResourceNotFoundException;
-import com.epam.esm.exception.ResourceNotUniqueException;
+import com.epam.esm.exception.ResourceExistenceException;
+import com.epam.esm.exception.DuplicateResourceException;
 import com.epam.esm.util.DataUtils;
 import com.epam.esm.validator.GiftCertificateValidator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -22,13 +23,6 @@ import java.util.Optional;
 public class GiftCertificateService {
 
     private static final String CERTIFICATE_WITH_SUCH_ID_DOESNT_EXIST = "Certificate with such id doesn't exist";
-    private static final String GIFT_EXIST_EXCEPTION = "The gift certificate already exist";
-    private static final String GIFT_NAME = "name";
-    private static final String GIFT_DESCRIPTION = "description";
-    private static final String GIFT_PRICE = "price";
-    private static final String GIFT_DURATION = "duration";
-    private static final String GIFT_CREATE_DATE = "create_date";
-    private static final String GIFT_LAST_UPDATE_DATE = "last_update_date";
 
     private final GiftCertificateDao giftCertificateDao;
     private final GiftCertificateTagDao giftCertificateTagDao;
@@ -57,7 +51,7 @@ public class GiftCertificateService {
         Optional<GiftCertificate> giftCertificateOptional = giftCertificateDao.getById(id);
 
         if (!giftCertificateOptional.isPresent()) {
-            throw new ResourceNotFoundException(CERTIFICATE_WITH_SUCH_ID_DOESNT_EXIST);
+            throw new ResourceExistenceException(CERTIFICATE_WITH_SUCH_ID_DOESNT_EXIST);
         }
 
         GiftCertificate giftCertificate = giftCertificateOptional.get();
@@ -77,7 +71,7 @@ public class GiftCertificateService {
         Optional<GiftCertificate> giftCertificateOptional = giftCertificateDao.getByName(giftCertificateDTO.getName());
 
         if (giftCertificateOptional.isPresent()) {
-            throw new ResourceNotUniqueException(GIFT_EXIST_EXCEPTION);
+            throw new DuplicateResourceException("The gift certificate already exist");
         }
 
         giftCertificateValidator.validate(giftCertificateDTO);
@@ -120,7 +114,7 @@ public class GiftCertificateService {
         Optional<GiftCertificate> giftCertificateOptional = giftCertificateDao.getById(id);
 
         if (!giftCertificateOptional.isPresent()) {
-            throw new ResourceNotFoundException(CERTIFICATE_WITH_SUCH_ID_DOESNT_EXIST);
+            throw new ResourceExistenceException(CERTIFICATE_WITH_SUCH_ID_DOESNT_EXIST);
         }
         giftCertificate.setLastUpdateDate(DataUtils.getCurrentTime(DATE_TIME_PATTERN));
         Map<String, String> fieldForUpdate = toMapWithoutNullField(giftCertificate);
@@ -137,34 +131,38 @@ public class GiftCertificateService {
 
         String name = giftCertificate.getName();
         String description = giftCertificate.getDescription();
-        Integer price = giftCertificate.getPrice();
+        BigDecimal price = giftCertificate.getPrice();
         Long duration = giftCertificate.getDuration();
         LocalDateTime createDate = giftCertificate.getCreateData();
         LocalDateTime lastUpdateDate = giftCertificate.getLastUpdateDate();
 
         if (name != null) {
-            presentFields.put(GIFT_NAME, name);
+            presentFields.put("name", name);
         }
         if (description != null) {
-            presentFields.put(GIFT_DESCRIPTION, description);
+            presentFields.put("description", description);
         }
         if (price != null) {
-            presentFields.put(GIFT_PRICE, price.toString());
+            presentFields.put("price", price.toString());
         }
         if (duration != null) {
-            presentFields.put(GIFT_DURATION, duration.toString());
+            presentFields.put("duration", duration.toString());
         }
         if (createDate != null) {
-            presentFields.put(GIFT_CREATE_DATE, createDate.toString());
+            presentFields.put("create_date", createDate.toString());
         }
         if (lastUpdateDate != null) {
-            presentFields.put(GIFT_LAST_UPDATE_DATE, lastUpdateDate.toString());
+            presentFields.put("last_update_date", lastUpdateDate.toString());
         }
 
         return presentFields;
     }
 
     public void deleteById(Integer id) {
+        Optional<GiftCertificate> gift = giftCertificateDao.getById(id);
+        if(!gift.isPresent()) {
+            throw new ResourceExistenceException(CERTIFICATE_WITH_SUCH_ID_DOESNT_EXIST);
+        }
         giftCertificateDao.deleteById(id);
     }
 

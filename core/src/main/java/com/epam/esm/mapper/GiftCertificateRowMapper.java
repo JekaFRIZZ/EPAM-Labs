@@ -19,7 +19,7 @@ public class GiftCertificateRowMapper implements RowMapper<GiftCertificate> {
         giftCertificate.setId(rs.getInt("id"));
         giftCertificate.setName(rs.getString("name"));
         giftCertificate.setDescription(rs.getString("description"));
-        giftCertificate.setPrice(rs.getInt("price"));
+        giftCertificate.setPrice(rs.getBigDecimal("price"));
         giftCertificate.setDuration(rs.getLong("duration"));
 
         String createDataString = rs.getString("create_date");

@@ -2,9 +2,7 @@ package com.epam.esm.dto;
 
 import com.epam.esm.entity.Tag;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -13,7 +11,7 @@ public class GiftCertificateDTO {
     private Long id;
     private String name;
     private String description;
-    private Integer price;
+    private BigDecimal price;
     private Long duration;
     private LocalDateTime createData;
     private LocalDateTime lastUpdateDate;
@@ -22,7 +20,7 @@ public class GiftCertificateDTO {
     public GiftCertificateDTO(Long id,
                               String name,
                               String description,
-                              Integer price,
+                              BigDecimal price,
                               Long duration,
                               LocalDateTime createData,
                               LocalDateTime lastUpdateDate,
@@ -37,11 +35,19 @@ public class GiftCertificateDTO {
         this.tags = tags;
     }
 
-    public GiftCertificateDTO(String name, String description, Integer price, Long duration) {
+    public GiftCertificateDTO(String name, String description, BigDecimal price, Long duration) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.duration = duration;
+    }
+
+    public GiftCertificateDTO(String name, String description, BigDecimal price, Long duration, List<Tag> tags) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.duration = duration;
+        this.tags = tags;
     }
 
     public GiftCertificateDTO() {
@@ -71,11 +77,11 @@ public class GiftCertificateDTO {
         this.description = description;
     }
 
-    public Integer getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(Integer price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 

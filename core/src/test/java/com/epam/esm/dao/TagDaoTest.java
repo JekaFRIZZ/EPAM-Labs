@@ -72,7 +72,7 @@ class TagDaoTest {
     }
 
     @Test
-    void create() {
+    void createShouldCreateTag() {
         Tag expected = new Tag("Spring");
 
         Integer id =  tagDao.create(expected);

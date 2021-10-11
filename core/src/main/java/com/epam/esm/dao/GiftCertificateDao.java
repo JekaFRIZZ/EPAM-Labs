@@ -24,6 +24,7 @@ public class GiftCertificateDao {
     private static final String CREATE = "INSERT INTO gift_certificate(name, description, price, duration, create_date, last_update_date) VALUES (?, ?, ?, ?, ?, ?)";
     private static final String GET_ALL = "SELECT * FROM gift_certificate";
     private static final String UPDATE = "UPDATE gift_certificate SET ";
+    private static final String DELETE_IN_GIFTS_AND_TAGS = "DELETE FROM gifts_and_tags WHERE certificate_id = ?";
 
     private static final int GIFT_NAME_INDEX = 1;
     private static final int GIFT_DESCRIPTION_INDEX = 2;
@@ -62,7 +63,7 @@ public class GiftCertificateDao {
 
             statement.setString(GIFT_NAME_INDEX, giftCertificate.getName());
             statement.setString(GIFT_DESCRIPTION_INDEX, giftCertificate.getDescription());
-            statement.setInt(GIFT_PRICE_INDEX, giftCertificate.getPrice());
+            statement.setBigDecimal(GIFT_PRICE_INDEX, giftCertificate.getPrice());
             statement.setLong(GIFT_DURATION_INDEX, giftCertificate.getDuration());
             statement.setString(GIFT_CREATE_DATA_INDEX, giftCertificate.getCreateData().toString());
             statement.setString(GIFT_LAST_UPDATE_DATA_INDEX, giftCertificate.getLastUpdateDate().toString());
@@ -80,6 +81,7 @@ public class GiftCertificateDao {
     }
 
     public void deleteById(Integer id) {
+        jdbcTemplate.update(DELETE_IN_GIFTS_AND_TAGS, id);
         jdbcTemplate.update(DELETE, id);
     }
 

@@ -3,8 +3,8 @@ package com.epam.esm.controller;
 import com.epam.esm.dto.GiftCertificateDTO;
 import com.epam.esm.entity.ErrorData;
 import com.epam.esm.entity.GiftCertificate;
-import com.epam.esm.exception.ResourceNotFoundException;
-import com.epam.esm.exception.ResourceNotUniqueException;
+import com.epam.esm.exception.ResourceExistenceException;
+import com.epam.esm.exception.DuplicateResourceException;
 import com.epam.esm.exception.ValidationException;
 import com.epam.esm.service.GiftCertificateService;
 import com.epam.esm.util.ErrorUtils;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Locale;
 
 @RestController
-@RequestMapping("/gift")
+@RequestMapping("/gifts")
 public class GiftCertificateController {
 
     private static final String PRODUCES = "application/json";
@@ -53,7 +53,7 @@ public class GiftCertificateController {
     }
 
     /**
-     * Returns {@link GiftCertificate} from a database by id or throws {@link ResourceNotFoundException} if {@link GiftCertificate} not exist
+     * Returns {@link GiftCertificate} from a database by id or throws {@link ResourceExistenceException} if {@link GiftCertificate} not exist
      *
      * @param id - id's {@link GiftCertificate}
      * @return {@link ResponseEntity} with a {@link HttpStatus} and a {@link GiftCertificate} object or a {@link ErrorData} object.
@@ -112,13 +112,13 @@ public class GiftCertificateController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @ExceptionHandler(ResourceNotFoundException.class)
+    @ExceptionHandler(ResourceExistenceException.class)
     public ResponseEntity<ErrorData> handleResourceNotFoundException(Locale locale){
         return ErrorUtils.createResponseEntityForCustomError(messageSource.getMessage(RESOURCE_NOT_FOUND, null, locale),
                 777, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(ResourceNotUniqueException.class)
+    @ExceptionHandler(DuplicateResourceException.class)
     public ResponseEntity<ErrorData> handleResourceNotUniqueException(Locale locale){
         return ErrorUtils.createResponseEntityForCustomError(messageSource.getMessage(RESOURCE_NOT_UNIQUE, null, locale),
                 7777, HttpStatus.NOT_FOUND);

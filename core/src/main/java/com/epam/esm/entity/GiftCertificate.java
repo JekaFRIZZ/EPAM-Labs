@@ -3,9 +3,7 @@ package com.epam.esm.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -15,7 +13,7 @@ public class GiftCertificate {
     private Integer id;
     private String name;
     private String description;
-    private Integer price;
+    private BigDecimal price;
     private Long duration;
     private LocalDateTime createData;
     private LocalDateTime lastUpdateDate;
@@ -26,7 +24,7 @@ public class GiftCertificate {
     public GiftCertificate(Integer id,
                            String name,
                            String description,
-                           Integer price,
+                           BigDecimal price,
                            Long duration,
                            LocalDateTime createData,
                            LocalDateTime lastUpdateDate,
@@ -47,7 +45,7 @@ public class GiftCertificate {
     public GiftCertificate(Integer id,
                            String name,
                            String description,
-                           Integer price,
+                           BigDecimal price,
                            Long duration,
                            LocalDateTime createData,
                            LocalDateTime lastUpdateDate) {
@@ -86,11 +84,11 @@ public class GiftCertificate {
         this.description = description;
     }
 
-    public Integer getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
-    public void setPrice(Integer price) {
+    public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
@@ -141,5 +139,19 @@ public class GiftCertificate {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, description, price, duration, createData, lastUpdateDate);
+    }
+
+    @Override
+    public String toString() {
+        return "GiftCertificate{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", duration=" + duration +
+                ", createData=" + createData +
+                ", lastUpdateDate=" + lastUpdateDate +
+                ", tags=" + tags +
+                '}';
     }
 }

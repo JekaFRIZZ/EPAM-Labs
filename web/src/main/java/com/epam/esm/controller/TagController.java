@@ -3,8 +3,8 @@ package com.epam.esm.controller;
 import com.epam.esm.dto.TagDTO;
 import com.epam.esm.entity.ErrorData;
 import com.epam.esm.entity.Tag;
-import com.epam.esm.exception.ResourceNotFoundException;
-import com.epam.esm.exception.ResourceNotUniqueException;
+import com.epam.esm.exception.ResourceExistenceException;
+import com.epam.esm.exception.DuplicateResourceException;
 import com.epam.esm.exception.ValidationException;
 import com.epam.esm.service.TagService;
 import com.epam.esm.util.ErrorUtils;
@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Locale;
 
 @RestController
-@RequestMapping("/tag")
+@RequestMapping("/tags")
 public class TagController {
 
     private static final String PRODUCES = "application/json";
@@ -48,7 +48,7 @@ public class TagController {
     }
 
     /**
-     * Returns {@link Tag} from a database by id or throws {@link ResourceNotFoundException} if {@link Tag} not exist
+     * Returns {@link Tag} from a database by id or throws {@link ResourceExistenceException} if {@link Tag} not exist
      *
      * @param id - id's {@link Tag}
      * @return {@link ResponseEntity} with a {@link HttpStatus} and a {@link Tag} object or a {@link ErrorData} object.
@@ -83,13 +83,13 @@ public class TagController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @ExceptionHandler(ResourceNotFoundException.class)
+    @ExceptionHandler(ResourceExistenceException.class)
     public ResponseEntity<ErrorData> handleResourceNotFoundException(Locale locale){
         return ErrorUtils.createResponseEntityForCustomError(messageSource.getMessage(RESOURCE_NOT_FOUND, null, locale),
                 777, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(ResourceNotUniqueException.class)
+    @ExceptionHandler(DuplicateResourceException.class)
     public ResponseEntity<ErrorData> handleResourceNotUniqueException(Locale locale){
         return ErrorUtils.createResponseEntityForCustomError(messageSource.getMessage(RESOURCE_NOT_UNIQUE, null, locale),
                 7777, HttpStatus.NOT_FOUND);

@@ -5,23 +5,24 @@ import com.epam.esm.dao.GiftCertificateTagDao;
 import com.epam.esm.dto.GiftCertificateDTO;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.entity.Tag;
+import com.epam.esm.util.TestDataUtils;
 import com.epam.esm.validator.GiftCertificateValidator;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 class GiftCertificateServiceTest {
 
+    private final GiftCertificate giftCertificate = Mockito.mock(GiftCertificate.class);
     private final GiftCertificateDao giftCertificateDao = Mockito.mock(GiftCertificateDao.class);
     private final GiftCertificateTagDao giftCertificateTagDao = Mockito.mock(GiftCertificateTagDao.class);
     private final TagService tagService = Mockito.mock(TagService.class);
@@ -52,7 +53,7 @@ class GiftCertificateServiceTest {
 
     @Test
     void testCreateShouldCreateGiftWhenCorrectFieldsApplied() {
-        GiftCertificateDTO giftCertificateDTO = new GiftCertificateDTO("name", "description", 1, 1L);
+        GiftCertificateDTO giftCertificateDTO = new GiftCertificateDTO("name", "description", BigDecimal.valueOf(1), 1L);
 
         giftCertificateDTO.setTags(Arrays.asList(new Tag("name")));
 
@@ -61,23 +62,23 @@ class GiftCertificateServiceTest {
         when(giftCertificateDao.create(new GiftCertificate())).thenReturn(id);
         doNothing().when(giftCertificateValidator).validate(giftCertificateDTO);
 
-        doNothing().when(giftCertificateTagDao).associateTagWithGift(anyInt(), anyInt());
-
         giftCertificateService.create(giftCertificateDTO);
     }
 
     @Test
     void testUpdateShouldUpdate() {
         Integer id = 1;
-        GiftCertificate giftCertificate = new GiftCertificate();
-        giftCertificate.setId(id);
-        giftCertificate.setDuration(44L);
+        GiftCertificate excepted = TestDataUtils.createGiftCertificate(id, "name", "something");
+        excepted.setName("Update");
+        GiftCertificate actual = TestDataUtils.createGiftCertificate(id, "Update", "something");
 
-        when(giftCertificateDao.getById(id)).thenReturn(Optional.of(giftCertificate));
+        when(giftCertificateDao.getById(id)).thenReturn(Optional.of(excepted));
 
         when(giftCertificateTagDao.getTagsByGiftId(id)).thenReturn(new ArrayList<>());
 
-        giftCertificateService.update(id, giftCertificate);
+        giftCertificateService.update(id, excepted);
+
+        assertEquals(excepted, actual);
     }
 
     @Test

@@ -21,6 +21,7 @@ public class TagDao {
     private static final String GET_ALL = "SELECT * FROM tag";
     private static final String DELETE = "DELETE FROM tag WHERE id = ?";
     private static final String GET_BY_NAME = "SELECT * FROM tag WHERE name = ?";
+    private static final String DELETE_FROM_GIFTS_AND_TAGS = "DELETE FROM gifts_and_tags WHERE tag_id = ?";
 
     private static final int TAG_NAME_INDEX = 1;
     private static final String SIZE_OF_LIST_MORE_THAN_1 = "Size of list more than 1";
@@ -60,6 +61,7 @@ public class TagDao {
     }
 
     public void deleteById(Integer id) {
+        jdbcTemplate.update(DELETE_FROM_GIFTS_AND_TAGS, id);
         jdbcTemplate.update(DELETE, id);
     }
 
