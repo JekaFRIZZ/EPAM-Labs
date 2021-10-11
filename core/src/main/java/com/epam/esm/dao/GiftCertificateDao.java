@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Repository
@@ -22,7 +23,7 @@ public class GiftCertificateDao {
     private static final String DELETE = "DELETE FROM gift_certificate WHERE id = ?";
     private static final String CREATE = "INSERT INTO gift_certificate(name, description, price, duration, create_date, last_update_date) VALUES (?, ?, ?, ?, ?, ?)";
     private static final String GET_ALL = "SELECT * FROM gift_certificate";
-    private static final String UPDATE = "UPDATE gift_certificate SET name=?, description=?,price=?,duration=?,create_date=? WHERE id = ?";
+    private static final String UPDATE = "UPDATE gift_certificate SET ";
 
     private static final int GIFT_NAME_INDEX = 1;
     private static final int GIFT_DESCRIPTION_INDEX = 2;
@@ -73,14 +74,9 @@ public class GiftCertificateDao {
         return key;
     }
 
-    public void update(GiftCertificate giftCertificate) {
-        jdbcTemplate.update(UPDATE,
-                giftCertificate.getName(),
-                giftCertificate.getDescription(),
-                giftCertificate.getPrice(),
-                giftCertificate.getDuration(),
-                giftCertificate.getCreateData().toString(),
-                giftCertificate.getId());
+    public void update(Integer id, Map<String, String> fieldForUpdate) {
+        String query = DBUtils.constructQueryForUpdate(UPDATE, id, fieldForUpdate);
+        jdbcTemplate.update(query);
     }
 
     public void deleteById(Integer id) {

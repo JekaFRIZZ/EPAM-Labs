@@ -13,9 +13,7 @@ import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -83,12 +81,18 @@ class GiftCertificateDaoTest {
 
     @Test
     void update() {
-        GiftCertificate excepted = new GiftCertificate(1, "Update", "something 1", 250, 13L, firstDate, secondDate);
-        firstGiftCertificate.setName("Update");
-        GiftCertificate actual = firstGiftCertificate;
-        giftCertificateDao.update(actual);
+        Integer id = 1;
+        GiftCertificate excepted = new GiftCertificate(id, "update", "something 1", 250, 13L, firstDate, secondDate);
+        excepted.setName("Update");
 
-        assertEquals(excepted, actual);
+        Map<String, String> fieldForUpdate = new HashMap<>();
+        fieldForUpdate.put("name", "Update");
+
+        giftCertificateDao.update(id, fieldForUpdate);
+
+        Optional<GiftCertificate> actual = giftCertificateDao.getById(excepted.getId());
+
+        assertEquals(excepted, actual.get());
     }
 
     @Test

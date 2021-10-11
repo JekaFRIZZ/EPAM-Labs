@@ -9,11 +9,13 @@ import com.epam.esm.validator.GiftCertificateValidator;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
@@ -68,9 +70,15 @@ class GiftCertificateServiceTest {
     void testUpdateShouldUpdate() {
         Integer id = 1;
         GiftCertificate giftCertificate = new GiftCertificate();
+        giftCertificate.setId(id);
+        giftCertificate.setDuration(44L);
+        List<Tag> tags = Arrays.asList(new Tag("tag name"));
+        giftCertificate.setTags(tags);
 
         when(giftCertificateDao.getById(id)).thenReturn(Optional.of(giftCertificate));
-        doNothing().when(giftCertificateDao).update(giftCertificate);
+        doNothing().when(giftCertificateDao).update(anyInt(), any());
+
+        when(giftCertificateTagDao.getTagsByGiftId(id)).thenReturn(new ArrayList<>());
 
         giftCertificateService.update(id, giftCertificate);
     }
