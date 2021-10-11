@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
@@ -68,17 +69,19 @@ class GiftCertificateServiceTest {
     @Test
     void testUpdateShouldUpdate() {
         Integer id = 1;
-        GiftCertificate excepted = TestDataUtils.createGiftCertificate(id, "name", "something");
-        excepted.setName("Update");
-        GiftCertificate actual = TestDataUtils.createGiftCertificate(id, "Update", "something");
+        GiftCertificate gift = TestDataUtils.createGiftCertificate(id, "name", "something");
+        gift.setName("Update");
 
-        when(giftCertificateDao.getById(id)).thenReturn(Optional.of(excepted));
+        when(giftCertificateDao.getById(id)).thenReturn(Optional.of(gift));
 
         when(giftCertificateTagDao.getTagsByGiftId(id)).thenReturn(new ArrayList<>());
 
-        giftCertificateService.update(id, excepted);
+        giftCertificateService.update(id, gift);
 
-        assertEquals(excepted, actual);
+        String expected = "Update";
+        String actual = giftCertificateDao.getById(id).get().getName();
+
+        assertEquals(expected, actual);
     }
 
     @Test
