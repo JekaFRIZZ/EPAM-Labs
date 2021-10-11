@@ -72,11 +72,8 @@ class GiftCertificateServiceTest {
         GiftCertificate giftCertificate = new GiftCertificate();
         giftCertificate.setId(id);
         giftCertificate.setDuration(44L);
-        List<Tag> tags = Arrays.asList(new Tag("tag name"));
-        giftCertificate.setTags(tags);
 
         when(giftCertificateDao.getById(id)).thenReturn(Optional.of(giftCertificate));
-        doNothing().when(giftCertificateDao).update(anyInt(), any());
 
         when(giftCertificateTagDao.getTagsByGiftId(id)).thenReturn(new ArrayList<>());
 
