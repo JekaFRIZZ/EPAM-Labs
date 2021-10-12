@@ -37,13 +37,6 @@ public class GiftCertificateController {
     }
 
     /**
-     * @param fieldName the name of the field which will be used for searching {@link GiftCertificate} objects in a database.
-     * @param isASC     the sorting order
-     * @return {@link ResponseEntity} with {@link HttpStatus} and all {@link GiftCertificate} objects or a {@link ErrorData} object.
-     */
-
-
-    /**
      * Returns all {@link GiftCertificate} from database
      *
      * @return {@link ResponseEntity} with a {@link HttpStatus} and all {@link GiftCertificate}.
