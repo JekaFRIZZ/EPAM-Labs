@@ -27,11 +27,6 @@ public class GiftCertificateController {
     private static final String VALID_EXCEPTION = "valid.exception";
 
 
-    private static final String ID = "/{id}";
-    private static final String FIELD_NAME = "fieldName";
-    private static final String IS_ASC = "isASC";
-    private static final String PATH_SORT = "/{fieldName}/{isASC}";
-
     private final GiftCertificateService giftCertificateService;
     private final MessageSource messageSource;
 
@@ -58,7 +53,7 @@ public class GiftCertificateController {
      * @param id - id's {@link GiftCertificate}
      * @return {@link ResponseEntity} with a {@link HttpStatus} and a {@link GiftCertificate} object or a {@link ErrorData} object.
      */
-    @GetMapping(value = ID, produces = PRODUCES)
+    @GetMapping(value = "/{id}", produces = PRODUCES)
     public ResponseEntity<?> getGiftById(@PathVariable("id") Integer id) {
         GiftCertificate giftCertificate = giftCertificateService.getById(id);
         return new ResponseEntity<>(giftCertificate, HttpStatus.OK);
@@ -71,7 +66,7 @@ public class GiftCertificateController {
      * @param giftCertificate - object which will be updated
      * @return {@link ResponseEntity} with {@link HttpStatus} alone or additionally with {@link ErrorData} object.
      */
-    @PatchMapping(value = ID, produces = PRODUCES)
+    @PatchMapping(value = "/{id}", produces = PRODUCES)
     public ResponseEntity<?> updateById(@PathVariable Integer id,@RequestBody GiftCertificate giftCertificate) {
         giftCertificateService.update(id, giftCertificate);
         return new ResponseEntity<>(HttpStatus.OK);
@@ -94,8 +89,8 @@ public class GiftCertificateController {
      * @param isASC the sorting order
      * @return {@link ResponseEntity} with {@link HttpStatus} and all {@link GiftCertificate} objects or a {@link ErrorData} object.
      */
-    @GetMapping(value = PATH_SORT, produces = PRODUCES)
-    public ResponseEntity<?> sortByFieldInOrder(@PathVariable(FIELD_NAME) String fieldName, @PathVariable(IS_ASC) boolean isASC) {
+    @GetMapping(value = "/{fieldName}/{isASC}", produces = PRODUCES)
+    public ResponseEntity<?> sortByFieldInOrder(@PathVariable("fieldName") String fieldName, @PathVariable("isASC") boolean isASC) {
         List<GiftCertificate> giftCertificates = giftCertificateService.sortByOrder(fieldName, isASC);
         return new ResponseEntity<>(giftCertificates, HttpStatus.OK);
     }
@@ -106,7 +101,7 @@ public class GiftCertificateController {
      * @param id {@link GiftCertificate} id which will be deleted
      * @return {@link ResponseEntity} with {@link HttpStatus} alone or additionally with {@link ErrorData} object.
      */
-    @DeleteMapping(value = ID, produces = PRODUCES)
+    @DeleteMapping(value = "/{id}", produces = PRODUCES)
     public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
         giftCertificateService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);

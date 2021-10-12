@@ -25,7 +25,6 @@ public class TagController {
     private static final String RESOURCE_NOT_FOUND = "resource.not.found";
     private static final String RESOURCE_NOT_UNIQUE = "resource.not.unique";
     private static final String VALID_EXCEPTION = "valid.exception";
-    private static final String ID = "/{id}";
 
     private final TagService tagService;
     private final MessageSource messageSource;
@@ -53,7 +52,7 @@ public class TagController {
      * @param id - id's {@link Tag}
      * @return {@link ResponseEntity} with a {@link HttpStatus} and a {@link Tag} object or a {@link ErrorData} object.
      */
-    @GetMapping(value = ID, produces = PRODUCES)
+    @GetMapping(value = "/{id}", produces = PRODUCES)
     public ResponseEntity<?> getTagById(@PathVariable("id") Integer id) {
         Tag tag = tagService.getById(id);
         return new ResponseEntity<>(tag, HttpStatus.OK);
@@ -77,7 +76,7 @@ public class TagController {
      * @param id {@link Tag} id which will be deleted
      * @return {@link ResponseEntity} with {@link HttpStatus} alone or additionally with {@link ErrorData} object.
      */
-    @DeleteMapping(value = ID, produces = PRODUCES)
+    @DeleteMapping(value = "/{id}", produces = PRODUCES)
     public ResponseEntity<?> deleteById(@PathVariable Integer id) {
         tagService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
