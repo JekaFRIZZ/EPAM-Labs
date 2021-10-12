@@ -37,13 +37,26 @@ public class GiftCertificateController {
     }
 
     /**
+     * @param fieldName the name of the field which will be used for searching {@link GiftCertificate} objects in a database.
+     * @param isASC     the sorting order
+     * @return {@link ResponseEntity} with {@link HttpStatus} and all {@link GiftCertificate} objects or a {@link ErrorData} object.
+     */
+
+
+    /**
      * Returns all {@link GiftCertificate} from database
      *
-     * @return  {@link ResponseEntity} with a {@link HttpStatus} and all {@link GiftCertificate}.
+     * @return {@link ResponseEntity} with a {@link HttpStatus} and all {@link GiftCertificate}.
      */
     @GetMapping(produces = PRODUCES)
-    public ResponseEntity<?> getAll() {
-        List<GiftCertificate> giftCertificates = giftCertificateService.getAll();
+    public ResponseEntity<?> getAll(@RequestParam(value = "fieldName", required = false) String fieldName,
+                                    @RequestParam(value = "isASC", required = false, defaultValue = "true") boolean isASC) {
+        List<GiftCertificate> giftCertificates;
+        if (fieldName != null) {
+            giftCertificates = giftCertificateService.sortByOrder(fieldName, isASC);
+        } else {
+            giftCertificates = giftCertificateService.getAll();
+        }
         return new ResponseEntity<>(giftCertificates, HttpStatus.OK);
     }
 
@@ -62,12 +75,12 @@ public class GiftCertificateController {
     /**
      * Updates {@link GiftCertificate} by id's {@link GiftCertificate}
      *
-     * @param id - id's {@link GiftCertificate} that should be updated
+     * @param id              - id's {@link GiftCertificate} that should be updated
      * @param giftCertificate - object which will be updated
      * @return {@link ResponseEntity} with {@link HttpStatus} alone or additionally with {@link ErrorData} object.
      */
     @PatchMapping(value = "/{id}", produces = PRODUCES)
-    public ResponseEntity<?> updateById(@PathVariable Integer id,@RequestBody GiftCertificate giftCertificate) {
+    public ResponseEntity<?> updateById(@PathVariable Integer id, @RequestBody GiftCertificate giftCertificate) {
         giftCertificateService.update(id, giftCertificate);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -84,16 +97,6 @@ public class GiftCertificateController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    /**
-     * @param fieldName the name of the field which will be used for searching {@link GiftCertificate} objects in a database.
-     * @param isASC the sorting order
-     * @return {@link ResponseEntity} with {@link HttpStatus} and all {@link GiftCertificate} objects or a {@link ErrorData} object.
-     */
-    @GetMapping(value = "/{fieldName}/{isASC}", produces = PRODUCES)
-    public ResponseEntity<?> sortByFieldInOrder(@PathVariable("fieldName") String fieldName, @PathVariable("isASC") boolean isASC) {
-        List<GiftCertificate> giftCertificates = giftCertificateService.sortByOrder(fieldName, isASC);
-        return new ResponseEntity<>(giftCertificates, HttpStatus.OK);
-    }
 
     /**
      * Deletes {@link GiftCertificate} by id if exist
@@ -108,19 +111,19 @@ public class GiftCertificateController {
     }
 
     @ExceptionHandler(ResourceExistenceException.class)
-    public ResponseEntity<ErrorData> handleResourceNotFoundException(Locale locale){
+    public ResponseEntity<ErrorData> handleResourceNotFoundException(Locale locale) {
         return ErrorUtils.createResponseEntityForCustomError(messageSource.getMessage(RESOURCE_NOT_FOUND, null, locale),
                 777, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(DuplicateResourceException.class)
-    public ResponseEntity<ErrorData> handleResourceNotUniqueException(Locale locale){
+    public ResponseEntity<ErrorData> handleResourceNotUniqueException(Locale locale) {
         return ErrorUtils.createResponseEntityForCustomError(messageSource.getMessage(RESOURCE_NOT_UNIQUE, null, locale),
                 7777, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(ValidationException.class)
-    public ResponseEntity<ErrorData> handleValidationException(Locale locale){
+    public ResponseEntity<ErrorData> handleValidationException(Locale locale) {
         return ErrorUtils.createResponseEntityForCustomError(messageSource.getMessage(VALID_EXCEPTION, null, locale),
                 777, HttpStatus.NOT_FOUND);
     }
