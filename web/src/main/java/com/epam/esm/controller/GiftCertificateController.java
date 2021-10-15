@@ -4,10 +4,7 @@ import com.epam.esm.dto.GiftCertificateDTO;
 import com.epam.esm.entity.ErrorData;
 import com.epam.esm.entity.GiftCertificate;
 import com.epam.esm.exception.ResourceExistenceException;
-import com.epam.esm.exception.DuplicateResourceException;
-import com.epam.esm.exception.ValidationException;
 import com.epam.esm.service.GiftCertificateService;
-import com.epam.esm.util.ErrorUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
@@ -15,17 +12,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Locale;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/gifts")
 public class GiftCertificateController {
 
     private static final String PRODUCES = "application/json";
-    private static final String RESOURCE_NOT_FOUND = "resource.not.found";
-    private static final String RESOURCE_NOT_UNIQUE = "resource.not.unique";
-    private static final String VALID_EXCEPTION = "valid.exception";
-
 
     private final GiftCertificateService giftCertificateService;
     private final MessageSource messageSource;
@@ -101,23 +94,5 @@ public class GiftCertificateController {
     public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
         giftCertificateService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @ExceptionHandler(ResourceExistenceException.class)
-    public ResponseEntity<ErrorData> handleResourceNotFoundException(Locale locale) {
-        return ErrorUtils.createResponseEntityForCustomError(messageSource.getMessage(RESOURCE_NOT_FOUND, null, locale),
-                777, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(DuplicateResourceException.class)
-    public ResponseEntity<ErrorData> handleResourceNotUniqueException(Locale locale) {
-        return ErrorUtils.createResponseEntityForCustomError(messageSource.getMessage(RESOURCE_NOT_UNIQUE, null, locale),
-                7777, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(ValidationException.class)
-    public ResponseEntity<ErrorData> handleValidationException(Locale locale) {
-        return ErrorUtils.createResponseEntityForCustomError(messageSource.getMessage(VALID_EXCEPTION, null, locale),
-                777, HttpStatus.NOT_FOUND);
     }
 }

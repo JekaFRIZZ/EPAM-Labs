@@ -3,6 +3,7 @@ package com.epam.esm.controller;
 import com.epam.esm.dto.TagDTO;
 import com.epam.esm.entity.ErrorData;
 import com.epam.esm.entity.Tag;
+import com.epam.esm.exception.CustomException;
 import com.epam.esm.exception.ResourceExistenceException;
 import com.epam.esm.exception.DuplicateResourceException;
 import com.epam.esm.exception.ValidationException;
@@ -67,7 +68,8 @@ public class TagController {
     @PostMapping(produces = PRODUCES)
     public ResponseEntity<?> create(@RequestBody TagDTO tagDTO) {
         tagService.create(tagDTO);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        Tag tag = tagService.getByName(tagDTO.getName());
+        return new ResponseEntity<>(tag, HttpStatus.CREATED);
     }
 
     /**
@@ -80,23 +82,5 @@ public class TagController {
     public ResponseEntity<?> deleteById(@PathVariable Integer id) {
         tagService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @ExceptionHandler(ResourceExistenceException.class)
-    public ResponseEntity<ErrorData> handleResourceNotFoundException(Locale locale){
-        return ErrorUtils.createResponseEntityForCustomError(messageSource.getMessage(RESOURCE_NOT_FOUND, null, locale),
-                777, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(DuplicateResourceException.class)
-    public ResponseEntity<ErrorData> handleResourceNotUniqueException(Locale locale){
-        return ErrorUtils.createResponseEntityForCustomError(messageSource.getMessage(RESOURCE_NOT_UNIQUE, null, locale),
-                7777, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(ValidationException.class)
-    public ResponseEntity<ErrorData> handleValidationException(Locale locale){
-        return ErrorUtils.createResponseEntityForCustomError(messageSource.getMessage(VALID_EXCEPTION, null, locale),
-                777, HttpStatus.NOT_FOUND);
     }
 }

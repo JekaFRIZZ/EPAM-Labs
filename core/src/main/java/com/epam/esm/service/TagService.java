@@ -35,7 +35,7 @@ public class TagService {
         Optional<Tag> tag = tagDao.getById(id);
 
         if(!tag.isPresent()) {
-            throw new ResourceExistenceException("Tag with such id doesn't exist");
+            throw new ResourceExistenceException("Tag with such id doesn't exist", 777);
         }
 
         return tag.get();
@@ -45,7 +45,7 @@ public class TagService {
         Optional<Tag> tag = tagDao.getByName(name);
 
         if(!tag.isPresent()) {
-            throw new ResourceExistenceException("Tag with such name doesn't exist");
+            throw new ResourceExistenceException("Tag with such name doesn't exist", 777);
         }
 
         return tag.get();
@@ -58,7 +58,7 @@ public class TagService {
         Optional<Tag> tagOptional = tagDao.getByName(tag.getName());
 
         if(tagOptional.isPresent()) {
-            throw new DuplicateResourceException("The tag already exist");
+            throw new DuplicateResourceException("The tag already exist", 7777);
         }
 
         tagDao.create(tag);
@@ -67,7 +67,7 @@ public class TagService {
     public void deleteById(Integer id) {
         Optional<Tag> tag = tagDao.getById(id);
         if(!tag.isPresent()) {
-            throw new ResourceExistenceException("Tag with such id doesn't exist");
+            throw new ResourceExistenceException("Tag with such id doesn't exist", 777);
         }
 
         tagDao.deleteById(id);
