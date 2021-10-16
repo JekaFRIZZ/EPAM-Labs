@@ -27,4 +27,9 @@ public class AllExceptionHandler {
     public @ResponseBody ErrorData handleFieldExistException(CustomException e){
         return new ErrorData(e.getMessage(), e.getErrorCode());
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public @ResponseBody ErrorData handleIllegalArgumentException(IllegalArgumentException e){
+        return new ErrorData(e.getMessage(), 7);
+    }
 }

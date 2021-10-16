@@ -3,12 +3,8 @@ package com.epam.esm.controller;
 import com.epam.esm.dto.TagDTO;
 import com.epam.esm.entity.ErrorData;
 import com.epam.esm.entity.Tag;
-import com.epam.esm.exception.CustomException;
 import com.epam.esm.exception.ResourceExistenceException;
-import com.epam.esm.exception.DuplicateResourceException;
-import com.epam.esm.exception.ValidationException;
 import com.epam.esm.service.TagService;
-import com.epam.esm.util.ErrorUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
@@ -16,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Locale;
 
 @RestController
 @RequestMapping("/tags")

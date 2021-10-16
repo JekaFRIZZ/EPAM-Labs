@@ -4,10 +4,11 @@ import com.epam.esm.dao.GiftCertificateDao;
 import com.epam.esm.dao.GiftCertificateTagDao;
 import com.epam.esm.dto.GiftCertificateDTO;
 import com.epam.esm.entity.GiftCertificate;
+import com.epam.esm.entity.OrderSort;
 import com.epam.esm.entity.Tag;
+import com.epam.esm.exception.DuplicateResourceException;
 import com.epam.esm.exception.FieldExistenceException;
 import com.epam.esm.exception.ResourceExistenceException;
-import com.epam.esm.exception.DuplicateResourceException;
 import com.epam.esm.util.DataUtils;
 import com.epam.esm.validator.GiftCertificateValidator;
 import org.springframework.stereotype.Service;
@@ -16,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class GiftCertificateService {
@@ -165,7 +165,7 @@ public class GiftCertificateService {
         giftCertificateDao.deleteById(id);
     }
 
-    public List<GiftCertificate> sortByOrder(String fieldName, boolean isASC) {
+    public List<GiftCertificate> sortByOrder(String fieldName, OrderSort isASC) {
         List<String> fieldNames = Arrays.asList("id", "name", "description", "price", "duration", "createData", "lastUpdateDate");
         if(!fieldNames.contains(fieldName)) {
             throw new FieldExistenceException("Field with name of '" + fieldName + "' doesn't exist", 77777);

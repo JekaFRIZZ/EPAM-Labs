@@ -1,6 +1,7 @@
 package com.epam.esm.dao;
 
 import com.epam.esm.entity.GiftCertificate;
+import com.epam.esm.entity.OrderSort;
 import com.epam.esm.mapper.GiftCertificateRowMapper;
 import com.epam.esm.util.DBUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,8 +98,8 @@ public class GiftCertificateDao {
         return Optional.empty();
     }
 
-    public List<GiftCertificate> sortByOrder(String fieldName, boolean isASC) {
-        String query = DBUtils.constructQueryForSorting(GET_ALL_WITHOUT_TAGS, fieldName, isASC);
+    public List<GiftCertificate> sortByOrder(String fieldName, OrderSort isASC) {
+        String query = DBUtils.constructQueryForSorting(GET_ALL_WITHOUT_TAGS, fieldName, isASC.isValue());
 
         return jdbcTemplate.query(query, new GiftCertificateRowMapper());
     }

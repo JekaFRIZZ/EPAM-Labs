@@ -3,6 +3,7 @@ package com.epam.esm.controller;
 import com.epam.esm.dto.GiftCertificateDTO;
 import com.epam.esm.entity.ErrorData;
 import com.epam.esm.entity.GiftCertificate;
+import com.epam.esm.entity.OrderSort;
 import com.epam.esm.exception.ResourceExistenceException;
 import com.epam.esm.service.GiftCertificateService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 @RestController
@@ -35,14 +37,29 @@ public class GiftCertificateController {
      * @return {@link ResponseEntity} with a {@link HttpStatus} and all {@link GiftCertificate}.
      */
     @GetMapping(produces = PRODUCES)
-    public ResponseEntity<?> getAll(@RequestParam(value = "fieldName", required = false) String fieldName,
-                                    @RequestParam(value = "isASC", required = false, defaultValue = "true") boolean isASC) {
-        List<GiftCertificate> giftCertificates;
-        if (fieldName != null) {
-            giftCertificates = giftCertificateService.sortByOrder(fieldName, isASC);
+    public ResponseEntity<?> getAll(@RequestParam Map<String, String> requestParam) {
+        String fieldName = null;
+        OrderSort isASC = OrderSort.ASC;
+        List<GiftCertificate> giftCertificates = null;
+
+        if (requestParam.get("fieldName") != null || requestParam.get("FIELDNAME") != null) {
+            if (requestParam.get("sort") != null || requestParam.get("SORT") != null) {
+                try {
+                    fieldName = requestParam.get("fieldName") != null ?
+                            requestParam.get("fieldName") : requestParam.get("FIELDNAME");
+
+                    isASC = requestParam.get("sort") != null ?
+                            OrderSort.valueOf(requestParam.get("sort")) : OrderSort.valueOf(requestParam.get("SORT"));
+                } catch (IllegalArgumentException e) {
+                    throw new IllegalArgumentException("Incorrect parameter");
+                }
+            }
         } else {
             giftCertificates = giftCertificateService.getAll();
+            return new ResponseEntity<>(giftCertificates, HttpStatus.OK);
         }
+
+        giftCertificates = giftCertificateService.sortByOrder(fieldName, isASC);
         return new ResponseEntity<>(giftCertificates, HttpStatus.OK);
     }
 
