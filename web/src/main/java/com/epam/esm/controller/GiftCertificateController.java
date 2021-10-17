@@ -20,8 +20,6 @@ import java.util.Map;
 @RequestMapping("/gifts")
 public class GiftCertificateController {
 
-    private static final String PRODUCES = "application/json";
-
     private final GiftCertificateService giftCertificateService;
     private final MessageSource messageSource;
 
@@ -36,31 +34,31 @@ public class GiftCertificateController {
      *
      * @return {@link ResponseEntity} with a {@link HttpStatus} and all {@link GiftCertificate}.
      */
-    @GetMapping(produces = PRODUCES)
+    @GetMapping()
     public ResponseEntity<?> getAll(@RequestParam Map<String, String> requestParam) {
         String fieldName = null;
         OrderSort isASC = OrderSort.ASC;
-        List<GiftCertificate> giftCertificates = null;
+        List<GiftCertificate> giftCertificates;
 
         if (requestParam.get("fieldName") != null || requestParam.get("FIELDNAME") != null) {
+
+            fieldName = requestParam.get("fieldName") != null ? requestParam.get("fieldName") : requestParam.get("FIELDNAME");
+
             if (requestParam.get("sort") != null || requestParam.get("SORT") != null) {
                 try {
-                    fieldName = requestParam.get("fieldName") != null ?
-                            requestParam.get("fieldName") : requestParam.get("FIELDNAME");
-
                     isASC = requestParam.get("sort") != null ?
                             OrderSort.valueOf(requestParam.get("sort")) : OrderSort.valueOf(requestParam.get("SORT"));
                 } catch (IllegalArgumentException e) {
-                    throw new IllegalArgumentException("Incorrect parameter");
+                    throw new IllegalArgumentException("Incorrect sort parameter");
                 }
             }
+            giftCertificates = giftCertificateService.sortByOrder(fieldName, isASC);
+            return new ResponseEntity<>(giftCertificates, HttpStatus.OK);
+
         } else {
             giftCertificates = giftCertificateService.getAll();
             return new ResponseEntity<>(giftCertificates, HttpStatus.OK);
         }
-
-        giftCertificates = giftCertificateService.sortByOrder(fieldName, isASC);
-        return new ResponseEntity<>(giftCertificates, HttpStatus.OK);
     }
 
     /**
@@ -69,7 +67,7 @@ public class GiftCertificateController {
      * @param id - id's {@link GiftCertificate}
      * @return {@link ResponseEntity} with a {@link HttpStatus} and a {@link GiftCertificate} object or a {@link ErrorData} object.
      */
-    @GetMapping(value = "/{id}", produces = PRODUCES)
+    @GetMapping(value = "/{id}")
     public ResponseEntity<?> getGiftById(@PathVariable("id") Integer id) {
         GiftCertificate giftCertificate = giftCertificateService.getById(id);
         return new ResponseEntity<>(giftCertificate, HttpStatus.OK);
@@ -82,10 +80,10 @@ public class GiftCertificateController {
      * @param giftCertificate - object which will be updated
      * @return {@link ResponseEntity} with {@link HttpStatus} alone or additionally with {@link ErrorData} object.
      */
-    @PatchMapping(value = "/{id}", produces = PRODUCES)
+    @PatchMapping(value = "/{id}")
     public ResponseEntity<?> updateById(@PathVariable Integer id, @RequestBody GiftCertificate giftCertificate) {
         giftCertificateService.update(id, giftCertificate);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(giftCertificate, HttpStatus.OK);
     }
 
     /**
@@ -94,10 +92,10 @@ public class GiftCertificateController {
      * @param giftCertificateDTO - object that will be converted to {@link GiftCertificate} and save to database
      * @return {@link ResponseEntity} with {@link HttpStatus} alone or additionally with {@link ErrorData} object.
      */
-    @PostMapping(produces = PRODUCES)
+    @PostMapping()
     public ResponseEntity<?> create(@RequestBody GiftCertificateDTO giftCertificateDTO) {
         giftCertificateService.create(giftCertificateDTO);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(giftCertificateDTO, HttpStatus.CREATED);
     }
 
 
@@ -107,7 +105,7 @@ public class GiftCertificateController {
      * @param id {@link GiftCertificate} id which will be deleted
      * @return {@link ResponseEntity} with {@link HttpStatus} alone or additionally with {@link ErrorData} object.
      */
-    @DeleteMapping(value = "/{id}", produces = PRODUCES)
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Integer id) {
         giftCertificateService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
